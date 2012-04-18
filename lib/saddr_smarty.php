@@ -1,4 +1,10 @@
 <?PHP
+/* (c) 2012 Etienne Bagnoud
+   This file is part of saddr project. saddr is under the MIT license.
+
+   See LICENSE file
+ */
+
 function s2s_ldapUrlGetUrl($ldap_url)
 {
    $ret=explode(' ', $ldap_url, 2);

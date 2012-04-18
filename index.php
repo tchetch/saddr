@@ -1,4 +1,9 @@
 <?PHP
+/* (c) 2012 Etienne Bagnoud
+   This file is part of saddr project. saddr is under the MIT license.
+
+   See LICENSE file
+ */
 define('SADDR__', 1);
 
 include(dirname(__FILE__).'/saddrErrors.php');

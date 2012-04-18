@@ -1,4 +1,9 @@
 <?PHP
+/* (c) 2012 Etienne Bagnoud
+   This file is part of saddr project. saddr is under the MIT license.
+
+   See LICENSE file
+ */
 
 define('SADDR_ERR_LDAP_CONNECTION',       0x0001);
 
