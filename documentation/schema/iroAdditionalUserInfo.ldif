@@ -1,0 +1,61 @@
+dn: cn=iroadditionaluserinfo,cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: iroadditionaluserinfo
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.0 NAME ( 'mozillaHomeState' 'i
+ roHomeState' ) DESC 'Name of a state for personnal address' SUP st SINGLE-VAL
+ UE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.1 NAME ( 'mozillaHomeLocalityN
+ ame' 'iroHomeLocality' ) DESC 'Locality for home address' SUP l SINGLE-VALUE 
+ )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.2 NAME ( 'mozillaHomePostalCod
+ e' 'iroHomePostalCode' ) DESC 'Postal code for home address' SUP postalCode S
+ INGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.7 NAME ( 'mozillaHomeCountryNa
+ me' 'iroHomeCountryName' ) DESC 'Home (living) country name (mozilla interop)
+ ' SUP countryName SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.8 NAME ( 'mozillaUseHtmlMail' 
+ 'iroUseHtmlMail' ) DESC 'True if mail is to send HTML formatted (mozilla inte
+ rop)' EQUALITY booleanMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.7 SINGLE-VALUE 
+ )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.3 NAME 'iroBankAccount' DESC '
+ Personal bank account number (IBAN)' EQUALITY caseIgnoreMatch SUBSTR caseIgno
+ reSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.4 NAME 'iroBankEstablishment' 
+ DESC 'Personnal user bank establishment' EQUALITY distinguishedNameMatch SYNT
+ AX 1.3.6.1.4.1.1466.115.121.1.12 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.9 NAME 'iroBankPostalAccount' 
+ DESC 'Bank postal account, use in some country' EQUALITY caseIgnoreMatch SUBS
+ TR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALU
+ E )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.10 NAME 'iroBankSwift' DESC 'S
+ wift code (or aka BIC-code)' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstr
+ ingsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.11 NAME 'iroBankClearing' DESC
+  'Bank clearing number' EQUALITY integerMatch SYNTAX 1.3.6.1.4.1.1466.115.121
+ .1.27 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.2.5 NAME 'iroContractStartDate'
+  DESC 'Person contract start' OBSOLETE EQUALITY caseIgnoreMatch SUBSTR caseIg
+ noreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.2.6 NAME 'iroContractEndDate' D
+ ESC 'Person contract end' OBSOLETE EQUALITY caseIgnoreMatch SUBSTR caseIgnore
+ SubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.12 NAME 'AVSNumberOld' DESC '
+ Old AVS number' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYN
+ TAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.30890.1.2.1.13 NAME 'AVSNumber' DESC 'Old
+  AVS number' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX
+  1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcObjectClasses: ( 1.3.6.1.4.1.30890.1.2.2.0 NAME 'iroAdditionalUserInfo' 
+ DESC 'Additional useful user information, use to extend inetOrgPerson' SUP to
+ p AUXILIARY MAY ( iroHomeState $ iroHomeLocality $ iroHomePostalCode $ iroBan
+ kAccount $ iroBankEstablishment $ iroUseHtmlMail $ iroHomeCountryName $ count
+ ryName $ AVSNumber $ AVSNumberOld ) )
+olcObjectClasses: ( 1.3.6.1.4.1.30890.1.2.2.1 NAME 'iroContractPerson' DESC
+  'Additional contractual information' OBSOLETE SUP top AUXILIARY MUST iroCont
+ ractStartDate MAY iroContractEndDate )
+olcObjectClasses: ( 1.3.6.1.4.1.30890.1.2.2.2 NAME 'iroBank' DESC 'Extended
+  information about bank' SUP top AUXILIARY MUST iroBankSwift MAY ( iroBankCle
+ aring $ iroBankPostalAccount ) )
+olcObjectClasses: ( 1.3.6.1.4.1.30890.1.2.2.3 NAME 'iroOrganizationExtended
+ ' DESC 'Extended information for organization' SUP top AUXILIARY MAY ( labele
+ dURI $ countryName $ mail $ uid ) )
