@@ -9,7 +9,7 @@
 </tr>
 {foreach $saddr.search_results as $res}
 <tr class="{if $res@index % 2 == 0}odd{else}even{/if}">
-	<td class="name"><a href="index.php?op=view&id={$res.id}" title="View details">{if isset($res.displayname)}{$res.displayname.0}
+	<td class="name"><a href="{saddr_url op="view" id=$res.id}" title="View details">{if isset($res.displayname)}{$res.displayname.0}
 		{else}{$res.name.0}{/if}</a>
 		</td>
 	<td class="mail">{if isset($res.work_email)}<a href="mailto:{$res.work_email.0}">{$res.work_email.0}</a>
@@ -26,7 +26,7 @@
 <tr class="{if $res@index % 2 == 0}odd{else}even{/if}">
 <td class="last"></td>
 <td colspan="3" class="last">
-<a href="index.php?op=doSearchForCompany&search={saddr_encrypt value=$res.company.0}"
+<a href="{saddr_url op="doSearchForCompany" search={saddr_encrypt value=$res.company.0}}"
  title="Search for {$res.company.0}">{$res.company.0}</a>
 </td>
 </tr>

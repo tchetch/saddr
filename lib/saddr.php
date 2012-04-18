@@ -37,7 +37,8 @@ function saddr_init()
             ),
          'enc'=>array(),
          'errors'=>array(),
-         'user_messages'=>array()
+         'user_messages'=>array(),
+         'base_filename'=>'index.php'
          );
    return $saddr;
 }
@@ -105,6 +106,17 @@ function saddr_includeModules(&$saddr)
    }
 
    return TRUE;
+}
+
+function saddr_setBaseFileName(&$saddr, $filename)
+{
+   $saddr['base_filename']=$filename;
+   return TRUE;
+}
+
+function saddr_getBaseFileName(&$saddr)
+{
+   return $saddr['base_filename'];
 }
 
 function saddr_setJsDojoPath(&$saddr, $path)

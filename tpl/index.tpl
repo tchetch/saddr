@@ -25,7 +25,7 @@ dojo.require('dijit.form.FilteringSelect');
 	{if isset($saddr) && isset($saddr.search_results) && 
 	  isset($saddr.search_results.__edit)}
      <div id="edit">
-		<form method="post" action="index.php?op=doAddOrEdit">
+		<form method="post" action="{saddr_url op="doAddOrEdit"}">
 		{if isset($saddr.search_results.id)}<input type="hidden" name="id" 
 			value="{$saddr.search_results.id}" />{/if}
 		{if isset($saddr.search_results.module)}<input type="hidden" 

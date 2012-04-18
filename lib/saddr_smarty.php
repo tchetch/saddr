@@ -126,6 +126,57 @@ function s2s_classOfMessage($params, $smarty)
    }
 }
 
+function s2s_generateUrl($params, $smarty)
+{
+   $saddr=$smarty->getTemplateVars('saddr');
+   $base_filename=saddr_getBaseFileName($saddr['handle']);
+
+   if(isset($params['encrypt'])) {
+      foreach(array('id', 'search', 'attribute') as $p) {
+         if(isset($params[$p])) {
+            $params[$p]=s2s_encUrl(array('value'=>$params[$p]), $smarty);
+         }
+      }
+   }
+
+   $url=$base_filename;
+   if(isset($params['op'])) {
+      switch($params['op']) {
+         default: break;
+         case 'preAdd':
+         case 'doAddOrEdit':
+            $url.='?op='.$params['op']; break;
+         case 'addOrEdit':
+         case 'view':
+            if(isset($params['id'])) {
+               $url.='?op='.$params['op'].'&id='.$params['id'];
+            }
+            break;
+         case 'doTagSearch':
+         case 'doGlobalSearch':
+         case 'doSearchForCompany':
+            if(isset($params['search'])) {
+               $url.='?op='.$params['op'].'&search='.$params['search'];
+            }
+            break;
+         case 'doSearchByAttribute':
+            if(isset($params['search']) && isset($params['attribute'])) {
+               $url.='?op=doSearchByAttribute&attribute='.$params['attribute'].
+                  '&search='.$params['search'];
+            }
+            break;
+         case 'doDelete':
+         case 'delete':
+            if(isset($params['timed_id'])) {
+               $url.='?op='.$params['op'].'&timed_id='.$params['timed_id'];
+            }
+            break;
+      }
+   } 
+   
+   return $url;
+}
+
 /* TODO Rewritte in a more structured way */
 function s2s_displaySmartyEntry($params, $smarty)
 {
@@ -271,10 +322,11 @@ function s2s_displaySmartyEntry($params, $smarty)
                }
                $html.='">';
                if(isset($params['searchable'])) {
-                  $html.='<a href="index.php?op=doSearchByAttribute&attribute=';
-                  $html.=s2s_encUrl(array('value'=>$params['e']), $smarty);
-                  $html.='&search=';
-                  $html.=s2s_encUrl(array('value'=>$v), $smarty);
+                  $html.='<a href="';
+                  $html.=s2s_generateUrl(array('op'=>'doSearchByAttribute',
+                           'attribute'=>$params['e'],
+                           'search'=>$v,
+                           'encrypt'=>1), $smarty);
                   $html.='" title="Search for '.$v.'">';
 
                }
@@ -292,10 +344,11 @@ function s2s_displaySmartyEntry($params, $smarty)
             }
             $html.='">';
             foreach($entry[$params['e']] as $v) {
-               $html.='<a href="index.php?op=doSearchByAttribute&attribute=';
-               $html.=s2s_encUrl(array('value'=>$params['e']), $smarty);
-               $html.='&search=';
-               $html.=s2s_encUrl(array('value'=>$v), $smarty);
+               $html.='<a href="';
+               $html.=s2s_generateUrl(array('op'=>'doSearchByAttribute',
+                        'attribute'=>$params['e'],
+                        'search'=>$v,
+                        'encrypt'=>1), $smarty);
                $html.='" title="Search for '.$v.'">';
                $html.=$v;
                $html.='&nbsp;</a>';
@@ -322,7 +375,10 @@ function s2s_displaySmartyEntry($params, $smarty)
                   } else {
                      $x[]=$e[$params['attributes']][0];
                   }
-                  $html.='<a href="index.php?op=view&id='.$e['id'].'">';
+                  $html.='<a href="';
+                  $html.=s2s_generateUrl(array('op'=>'view',
+                           'id'=>$e['id']), $smarty);
+                  $html.='">';
                   $html.=vsprintf($params['format'], $x);
                   $html.='</a>';
                   $html.='</div>';

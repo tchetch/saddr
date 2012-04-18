@@ -37,6 +37,10 @@ setlocale(LC_ALL, 'en_US.UTF-8');
 /* Code start */
 $Saddr=saddr_init();
 
+/* Guess saddr base filename */
+$saddr_filename=basename(__FILE__);
+saddr_setBaseFileName($Saddr, $saddr_filename);
+
 /* INIT LDAP */
 $Ldap=NULL;
 
@@ -59,9 +63,23 @@ if($Ldap==NULL || $Ldap==FALSE) {
    saddr_setLdap($Saddr, $Ldap);
 }
 
-
 /* Search proxy to generate encrypted search query */
-include(dirname(__FILE__).'/saddrSearchProxy.php');
+if(isset($_POST['saddrGoSearch'])) {
+   if(isset($_POST['saddrGlobalSearch']) &&
+         !empty($_POST['saddrGlobalSearch'])) {
+      header('Location: '.saddr_getBaseFileName($Saddr).'?op=doGlobalSearch&search='.
+            saddr_urlEncrypt($Saddr, $_POST['saddrGlobalSearch']));
+      exit(0);
+   } else if(isset($_POST['saddrTagSearch']) &&
+         !empty($_POST['saddrTagSearch'])) {
+      header('Location: '.saddr_getBaseFileName($Saddr).'?op=doTagSearch&search='.
+            saddr_urlEncrypt($Saddr, $_POST['saddrTagSearch']));
+      exit(0);
+   } else {
+      header('Location: ' . $_SERVER['HTTP_REFERER']);
+      exit(0);
+   }
+}
 
 /* INIT SMARTY */
 $Smarty=new Smarty();
@@ -100,6 +118,7 @@ $Smarty->registerPlugin('block', 'saddr_when_module_available',
 $Smarty->registerPlugin('function', 'saddr_dojo', 's2s_dojoPath');
 $Smarty->registerPlugin('function', 'saddr_dijit_theme_path', 's2s_dijitThemePath');
 $Smarty->registerPlugin('function', 'saddr_dijit_theme_name', 's2s_dijitThemeName');
+$Smarty->registerPlugin('function', 'saddr_url', 's2s_generateUrl');
 
 saddr_setSmarty($Saddr, $Smarty);
 

@@ -1,29 +1,29 @@
 <!-- HEADER -->
 <div id="saddr_searchBoxes">
-<form method="POST" action="index.php" name="saddr_search">
+<form method="POST" action="{saddr_url}" name="saddr_search">
 <span id="saddr_title">saddr</span>
 <span id="saddr_toolbox">
-<span><a href="index.php" title="Back home">Home</a></span>
+<span><a href="{saddr_url}" title="Back home">Home</a></span>
 {if isset($saddr.op) && 
 	isset($saddr.search)}
-<span><a href="index.php?op={$saddr.op}&search={$saddr.search}"
+<span><a href="{saddr_url op=$saddr.op search=$saddr.search}"
 	title="Search again">Search again</a></span>
 {/if}
 {if isset($saddr.search_results) &&
    isset($saddr.search_results.id)}
 <span>
 {if !isset($saddr.search_results.__edit)}
-   <a href="index.php?op=addOrEdit&id={$saddr.search_results.id}"
+   <a href="{saddr_url op=addOrEdit id=$saddr.search_results.id}"
    title="Edit {$saddr.search_results.name.0}">Edit</a>
 {else}
-   <a href="index.php?op=view&id={$saddr.search_results.id}"
+   <a href="{saddr_url op=view id=$saddr.search_results.id}"
    title="View {$saddr.search_results.name.0}">View</a>
 {/if}
 </span>
 {/if}
 
 {if isset($saddr.__delete)}
-<span class="dangerous"><a href="index.php?op=delete&timed_id={$saddr.__delete}"
+<span class="dangerous"><a href="{saddr_url op="delete" timed_id=$saddr.__delete}"
     title="Delete entry" class="dangerous">Delete</a></span>
 {/if}
 
