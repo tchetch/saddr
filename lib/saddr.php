@@ -461,7 +461,7 @@ function saddr_getTempDir(&$saddr)
       if(empty($tmp)) {
          $tmp='/tmp/';
       }
-      if(@mkdir($tmp.'/saddr-tmp/')) {
+      if(!@mkdir($tmp.'/saddr-tmp/')) {
          $tmp=$tmp.'/saddr-tmp/';
       }
 
