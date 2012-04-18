@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" 
 	lang="en">
 <head>
-<script src="/jslib/dojo/dojo.js" data-dojo-config="parseOnLoad: true" ></script>
+<script src="{saddr_dojo}" data-dojo-config="parseOnLoad: true" ></script>
 <script>
 dojo.require('dijit.form.TextBox');
 dojo.require('dijit.form.NumberTextBox');
@@ -15,9 +15,9 @@ dojo.require('dijit.form.FilteringSelect');
 </script>
 <title>saddr</title>
 <link rel="stylesheet" href="css/default/default.css" type="text/css" />
-<link rel="stylesheet" href="/jslib/dijit/themes/nihilo/nihilo.css" type="text/css" />
+<link rel="stylesheet" href="{saddr_dijit_theme_path}" type="text/css" />
 </head>
-<body class="nihilo">
+<body class="{saddr_dijit_theme_name}">
 {include file="header.tpl"}
 
 <div id="saddr_content">

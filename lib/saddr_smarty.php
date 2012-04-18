@@ -32,6 +32,24 @@ function s2s_encUrl($params, $smarty)
    return;
 }
 
+function s2s_dojoPath($params, $smarty)
+{
+   $saddr=$smarty->getTemplateVars('saddr');
+   return saddr_getJsDojoPath($saddr['handle']);
+}
+
+function s2s_dijitThemePath($params, $smarty)
+{
+   $saddr=$smarty->getTemplateVars('saddr');
+   return saddr_getDijitThemePath($saddr['handle']);
+}
+
+function s2s_dijitThemeName($params, $smarty)
+{
+   $saddr=$smarty->getTemplateVars('saddr');
+   return saddr_getDijitThemeName($saddr['handle']);
+}
+
 function s2s_readEntry($params, $smarty)
 {
    $saddr=$smarty->getTemplateVars('saddr');

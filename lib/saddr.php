@@ -7,6 +7,11 @@ function saddr_init()
             'handle'=>NULL,
             'base'=>''
             ),
+         'dojo'=>array(
+            'path'=>'/dojo/dojo.js',
+            'theme'=>'/dijit/themes/nihilo/nihilo.css',
+            'theme_name'=>'nihilo'
+            ),
          'smarty'=>array(
             'handle'=>NULL
             ),
@@ -100,6 +105,39 @@ function saddr_includeModules(&$saddr)
    }
 
    return TRUE;
+}
+
+function saddr_setJsDojoPath(&$saddr, $path)
+{
+   $saddr['dojo']['path']=$path;
+   return TRUE;
+}
+
+function saddr_setDijitThemePath(&$saddr, $path)
+{
+   $saddr['dojo']['theme']=$path;
+   return TRUE;
+}
+
+function saddr_setDijitThemeName(&$saddr, $name)
+{
+   $saddr['dojo']['theme_name']=$name;
+   return TRUE;
+}
+
+function saddr_getJsDojoPath(&$saddr)
+{
+   return $saddr['dojo']['path'];
+}
+
+function saddr_getDijitThemePath(&$saddr)
+{
+   return $saddr['dojo']['theme'];
+}
+
+function saddr_getDijitThemeName(&$saddr)
+{
+   return $saddr['dojo']['theme_name'];
 }
 
 function saddr_getDefaultModuleName(&$saddr)
@@ -425,27 +463,6 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
    }
 
    return $smarty_entry; 
-}
-
-function saddr_checkAttr($entry, $attr)
-{
-   if(isset($entry[$attr]) && $entry[$attr]['count']>0)
-      return TRUE;
-   return FALSE;
-}
-
-function saddr_cpyAttrVal($entry, $attr, &$dest, $new_attr='')
-{
-   if(empty($new_attr)) $new_attr=$attr;
-
-   if(saddr_checkAttr($entry, $attr)) {
-      $dest[$new_attr]=array();
-      for($i=0;$i<$entry[$attr]['count'];$i++) {
-         $dest[$new_attr][$i]=$entry[$attr][$i];
-      }
-      return TRUE;
-   }
-   return FALSE;
 }
 
 function saddr_isModuleAvailable(&$saddr, $module)

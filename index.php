@@ -4,17 +4,27 @@ define('SADDR__', 1);
 include(dirname(__FILE__).'/saddrErrors.php');
 
 /* My own library, must be includable */
-include('tchetch/tch.php');
+$tchetch_path=getenv('SADDR_TCHETCH_PATH');
+if(!empty($tchetch_path) && is_readable($tchetch_path)) {
+   include($tchetch_path);
+} else {
+   include('tchetch/tch.php');
+}
 if(!defined('TCH__')) die('Missing tchetch/tch.php');
 
 /* Extern project */
-if(tch_isIncludable('Smarty3/Smarty.class.php'))
-   include('Smarty3/Smarty.class.php');
-else if(tch_isIncludable('Smarty/Smarty.class.php'))
-   include('Smarty/Smarty.class.php');
-else if(tch_isIncludable('Smarty.class.php'))
-   include('/Smarty.class.php');
-else die('Missing Smarty');
+$smarty_path=getenv('SADDR_SMARTY_PATH');
+if(!empty($smarty_path) && is_readable($smarty_path)) {
+   include($smarty_path);
+} else {
+   if(tch_isIncludable('Smarty3/Smarty.class.php'))
+      include('Smarty3/Smarty.class.php');
+   else if(tch_isIncludable('Smarty/Smarty.class.php'))
+      include('Smarty/Smarty.class.php');
+   else if(tch_isIncludable('Smarty.class.php'))
+      include('/Smarty.class.php');
+   else die('Missing Smarty');
+}
 
 /* in saddr tree */
 include(dirname(__FILE__).'/lib/saddr.php');
@@ -87,6 +97,9 @@ $Smarty->registerPlugin('function', 'saddr_class_message', 's2s_classOfMessage')
 $Smarty->registerPlugin('function', 'saddr_entry', 's2s_displaySmartyEntry');
 $Smarty->registerPlugin('block', 'saddr_when_module_available', 
       's2s_whenModuleAvailable');
+$Smarty->registerPlugin('function', 'saddr_dojo', 's2s_dojoPath');
+$Smarty->registerPlugin('function', 'saddr_dijit_theme_path', 's2s_dijitThemePath');
+$Smarty->registerPlugin('function', 'saddr_dijit_theme_name', 's2s_dijitThemeName');
 
 saddr_setSmarty($Saddr, $Smarty);
 
