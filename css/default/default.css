@@ -1,0 +1,138 @@
+html { padding:0;margin:0;}
+body { padding:0;margin:0; font-family: sans-serif;}
+
+h1 { font-size: 1.6em; }
+h2 { font-size: 1.2em; }
+h3 { font-size: 1em; }
+
+table.saddrSearchResults { 
+	border-spacing: 0;
+	width: 100%;
+}
+table.saddrSearchResults td.name {
+	width: 30%;
+}
+table.saddrSearchResults td.mail {
+	width: 30%;
+}
+table.saddrSearchResults td {
+	padding-top: 3px;
+	width: 20%;
+}
+table.saddrSearchResults td.last {
+	border-bottom: 1px dotted black;
+	padding-bottom: 3px;
+}
+table.saddrSearchResults tr.odd {
+	background-color: #DDFFBB;
+}
+
+div#saddr_searchBoxes {
+	background-color: gray;
+	color: white;
+	margin: 0; padding:0;
+	padding-top: 5px; padding-bottom: 5px;
+	text-align: right;
+	font-size: 0.8em;
+}
+
+div#saddr_searchBoxes span#saddr_title {
+	float: left;
+	padding-left: 5px;
+	font-size: 1.6em; font-weight: bold;
+}
+
+div#saddr_content {
+	width: 96%;
+	margin: auto;
+   overflow: hidden;
+}
+
+div#saddr_footer {
+	clear: both;
+	padding: 15px;
+	text-align: right; font-size: 0.6em;
+}
+
+a {
+	text-decoration: none;
+	color: #A00000;
+}
+
+span#saddr_toolbox {
+   float: left; position: relative;
+   left: 5%; bottom: -5px; width: 30%;
+   font-size: 1em; font-weight: bold;
+}
+
+span#saddr_toolbox span {
+   float: left; 
+   background-color: white;
+   margin-left: 2px; 
+   padding: 3px; padding-left: 8px; padding-right: 8px;
+}
+
+span#saddr_toolbox span.dangerous {
+   float: right;
+}
+
+div#saddr_buttonsContainer {
+   clear: both; text-align: center; width: 100%;
+}
+
+div#saddr_messageContainer {
+   width: 100%;
+}
+
+div.saddr_message {
+   width: 96%; clear: both; margin: auto;
+   font-size: 0.6em;
+   padding: 1px;
+}
+
+div.saddr_msgError {
+   border: 1px dotted #FF0000;
+   background-color: #FFCCCC;
+}
+div.saddr_msgGood {
+   border: 1px dotted #00FF00;
+   background-color: #CCFFCC;
+}
+
+div.saddr_section {
+   width: 48%;
+}
+
+div.saddr_sectionLeft {
+   float: left; clear: left;
+}
+div.saddr_sectionRight {
+   float: right; clear: right;
+   bolder: 1px solid red;
+}
+
+.saddr_label {
+   background-color: #F9F9F9;
+   display: inline-block; width: 35%;
+   float: left; clear: left;
+   font-size: 0.8em; line-height: 2em; font-weight: bold;
+}
+
+.saddr_value {
+   display: inline-block; 
+   float: right; clear: right;
+}
+
+div#edit .saddr_value {
+   width: 63% !important;
+}
+
+.saddr_valueNoLabel {
+   float: left !important;
+   width: 100%;
+}
+
+.saddr_groupOfValue {
+   clear: both; margin-top: 5px;
+   width: 100%; overflow: hidden;
+}
