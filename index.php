@@ -29,11 +29,13 @@ $Saddr=saddr_init();
 
 /* INIT LDAP */
 $Ldap=NULL;
+
+/* Include local index file */
 if(tch_isIncludable('saddr.index.local.php')) {
    include('saddr.index.local.php');
    $Ldap=local_saddr_ldapBind();
 } else {
-   $local_ldap_bind_file=getenv('SADDR_LDAP_BIND_CODE');
+   $local_ldap_bind_file=getenv('SADDR_LOCAL_INDEX');
    if(!empty($local_ldap_bind_file)) {
       if(tch_isIncludable($local_ldap_bind_file)) {
          include($local_ldap_bind_file);
