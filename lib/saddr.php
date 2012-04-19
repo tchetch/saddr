@@ -10,7 +10,11 @@ function saddr_init()
    $saddr=array(
          'ldap'=>array(
             'handle'=>NULL,
-            'base'=>''
+            'base'=>'',
+            'host'=>'localhost',
+            /* User and pass to NULL => Anonymous auth */
+            'user'=>NULL,
+            'pass'=>NULL
             ),
          'dojo'=>array(
             'path'=>'/dojo/dojo.js',
@@ -48,13 +52,14 @@ function saddr_init()
    return $saddr;
 }
 
-function saddr_setError(&$saddr, $id)
+function saddr_setError(&$saddr, $id, $file=__FILE__, $line=__LINE__)
 {
    if(is_integer($id)) {
-      $saddr['errors'][microtime()]=array('id'=>$id);
+      $saddr['errors'][microtime()]=array('id'=>$id, 'file'=>$file,
+            'line'=>$line);
    } else {
       $saddr['errors'][microtime()]=array('id'=>
-            SADDR_ERR_UNKNOWN_ERROR, '_id'=>$id);
+            SADDR_ERR_UNKNOWN_ERROR, '_id'=>$id, 'file'=>$file, 'line'=>$line);
    }
 }
 
@@ -111,6 +116,39 @@ function saddr_includeModules(&$saddr)
    }
 
    return TRUE;
+}
+
+function saddr_setUser(&$saddr, $user)
+{
+   $saddr['ldap']['user']=$user;
+   return TRUE;
+}
+
+function saddr_getUser(&$saddr)
+{
+   return $saddr['ldap']['user'];
+}
+
+function saddr_setPass(&$saddr, $pass)
+{
+   $saddr['ldap']['pass']=$pass;
+   return TRUE;
+}
+
+function saddr_getPass(&$saddr)
+{
+   return $saddr['ldap']['pass'];
+}
+
+function saddr_setLdapHost(&$saddr, $host)
+{
+   $saddr['ldap']['host']=$host;
+   return TRUE;
+}
+
+function saddr_getLdapHost(&$saddr)
+{
+   return $saddr['ldap']['host'];
 }
 
 function saddr_setBaseFileName(&$saddr, $filename)

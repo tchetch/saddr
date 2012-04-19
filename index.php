@@ -46,27 +46,99 @@ $Saddr=saddr_init();
 $saddr_filename=basename(__FILE__);
 saddr_setBaseFileName($Saddr, $saddr_filename);
 
-/* INIT LDAP */
-$Ldap=NULL;
-
 /* Include local index file */
 if(tch_isIncludable('saddr.index.local.php')) {
    include('saddr.index.local.php');
-   $Ldap=local_saddr_ldapBind();
 } else {
    $local_ldap_bind_file=getenv('SADDR_LOCAL_INDEX');
    if(!empty($local_ldap_bind_file)) {
       if(tch_isIncludable($local_ldap_bind_file)) {
          include($local_ldap_bind_file);
-         $Ldap=local_saddr_ldapBind();
       }
    }
 }
-if($Ldap==NULL || $Ldap==FALSE) {
-   saddr_setError($Saddr, SADDR_ERR_LDAP_CONNECTION);
+
+/* INIT LDAP */
+$Ldap=NULL;
+$ldap_host=saddr_getLdapHost($Saddr);
+if(is_string($ldap_host)) {
+   $Ldap=ldap_connect($ldap_host);
+   if($Ldap) {
+      $root_dse=tch_getRootDSE($Ldap);
+      if($root_dse) {
+
+         /* Find and set LDAP Version */
+         if(($ldap_version=tch_getLdapVersion($Ldap, $root_dse))!==FALSE) {
+            if(!ldap_set_option($Ldap, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
+               saddr_setError($Saddr, SADDR_ERR_LDAP_VERSION, __FILE__,
+                     __LINE__);
+               ldap_close($Ldap);
+               $Ldap=NULL;
+            }
+         } else {
+            saddr_setError($Saddr, SADDR_ERR_LDAP_VERSION, __FILE__, __LINE__);
+            ldap_close($Ldap);
+            $Ldap=NULL;
+         }
+
+         /* Find directory base, take the first found */
+         if($Ldap!=NULL) {
+            if(($bases=tch_getLdapBases($Ldap, $root_dse))!==FALSE) {
+               saddr_setLdapBase($Saddr, $bases[0]);
+            } else {
+               saddr_setError($Saddr, SADDR_ERR_LDAP_BASE, __FILE__,
+                     __LINE__);
+               ldap_close($Ldap);
+               $Ldap=NULL;
+            }
+         }
+
+         /* Bind either with provided user/pass or anonymously */
+         if($Ldap!=NULL) {
+            $user=saddr_getUser($Saddr);
+            $pass=saddr_getPass($Saddr);
+            if(is_string($user) && is_string($pass)) {
+               if(ldap_bind($Ldap, $user, $pass)) {
+                  saddr_setLdap($Saddr, $Ldap);
+               } else {
+                  saddr_setError($Saddr, SADDR_ERR_LDAP_BIND, __FILE__,
+                        __LINE__);
+                  saddr_setUserMessage($Saddr, 'Authentication failed');
+                  ldap_close($Ldap);
+                  $Ldap=NULL;
+               }
+            } else {
+               /* Anonymous bind */
+               if(ldap_bind($Ldap)) {
+                  saddr_setLdap($Saddr, $Ldap);
+                  saddr_setUserMessage($Saddr, 'Anonmyous connection',
+                        SADDR_MSG_WARNING);
+               } else {
+                  saddr_setError($Saddr, SADDR_ERR_LDAP_BIND, __FILE__,
+                        __LINE__);
+                  saddr_setUserMessage($Saddr, 'Authentication failed');
+                  ldap_close($Ldap);
+                  $Ldap=NULL;
+               }
+            }
+         }
+      } else {
+         saddr_setError($Saddr, SADDR_ERR_ROOTDSE, __FILE__, __LINE__);
+         ldap_close($Ldap);
+         $Ldap=NULL;
+      }
+   } else {
+      saddr_setError($Saddr, SADDR_ERR_LDAP_CONNECTION, __FILE__, __LINE__);
+      $Ldap=NULL;
+   }
 } else {
-   saddr_setLdap($Saddr, $Ldap);
+   saddr_setError($Saddr, SADDR_ERR_NOT_STRING, __FILE__, __LINE__);
 }
+
+if($Ldap==NULL) {
+   saddr_setUserMessage($Saddr, 'Failed to connect to server');
+}
+
 
 /* Search proxy to generate encrypted search query */
 if(isset($_POST['saddrGoSearch'])) {
@@ -335,7 +407,6 @@ if(isset($_GET['op'])) {
          }
          break;
       }
-
 }
 saddr_getSmarty($Saddr)->assign('saddr', $saddr_results);
 
