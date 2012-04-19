@@ -421,7 +421,6 @@ if(isset($_GET['op'])) {
       }
 }
 
-print_r($Saddr);
 saddr_getSmarty($Saddr)->assign('saddr', $saddr_results);
 
 /* DISPLAY */
