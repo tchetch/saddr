@@ -93,6 +93,18 @@ if(is_string($ldap_host)) {
             }
          }
 
+         /* Get objectclasses available in directory */
+         if($Ldap!=NULL) {
+            if(($oc=tch_getLdapObjectClasses($Ldap, $root_dse))!=FALSE) {
+               saddr_setLdapObjectClasses($Saddr, $oc); 
+            } else {
+               saddr_setError($Saddr, SADDR_ERR_LDAP_OBJECTCLASS, __FILE__,
+                     __LINE__);
+               ldap_close($Ldap);
+               $Ldap=NULL;
+            }
+         }
+
          /* Bind either with provided user/pass or anonymously */
          if($Ldap!=NULL) {
             $user=saddr_getUser($Saddr);
@@ -408,6 +420,8 @@ if(isset($_GET['op'])) {
          break;
       }
 }
+
+print_r($Saddr);
 saddr_getSmarty($Saddr)->assign('saddr', $saddr_results);
 
 /* DISPLAY */

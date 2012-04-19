@@ -14,7 +14,8 @@ function saddr_init()
             'host'=>'localhost',
             /* User and pass to NULL => Anonymous auth */
             'user'=>NULL,
-            'pass'=>NULL
+            'pass'=>NULL,
+            'objectclass'=>array()
             ),
          'dojo'=>array(
             'path'=>'/dojo/dojo.js',
@@ -68,6 +69,26 @@ function saddr_setUserMessage(&$saddr, $message, $level=SADDR_MSG_ERROR)
    $saddr['user_messages'][]=array('msg'=>$message, 'level'=>$level);
 }
 
+function saddr_removeModule(&$saddr, $module)
+{
+   if(isset($saddr['functions']['modules'][$module])) {
+      unset($saddr['functions']['modules'][$module]);
+      foreach($saddr['modules']['names'] as $k=>$v) {
+         if($v==$module) {
+            unset($saddr['modules']['names'][$k]);
+            break;
+         }
+      }
+      foreach($saddr['modules']['objectclass'] as $k=>$v) {
+         if($v==$module) {
+            unset($saddr['modules']['objectclass'][$k]);
+            break;
+         }
+      }
+   }
+   return TRUE;
+}
+
 function saddr_includeModules(&$saddr)
 {
    $path=saddr_getModuleDirectory($saddr);
@@ -95,16 +116,28 @@ function saddr_includeModules(&$saddr)
                               }
                            }
                            if($all_func) {
-                              $saddr['modules']['names'][]=$file;
-                              foreach($saddr['functions']['names'] as $f) {
-                                 $saddr['functions']['modules'][$file][$f]=
-                                    $fn_list[$f];
+                              $oc=call_user_func($fn_list['getClass']);
+
+                              $av_oc=saddr_getLdapObjectClasses($saddr);
+                              if(in_array($oc['structural'], $av_oc)) {
+                                 $all_class=TRUE;
+                                 foreach($oc['auxiliary'] as $aux) {
+                                    if(!in_array($aux, $av_oc)) {
+                                       $all_class=FALSE;
+                                       break;
+                                    }
+                                 }
+
+                                 if($all_class) {
+                                    $saddr['modules']['names'][]=$file;
+                                    foreach($saddr['functions']['names'] as $f) {
+                                       $saddr['functions']['modules'][$file][$f]=
+                                          $fn_list[$f];
+                                    }
+                                    $saddr['modules']['objectclass'][$oc['search']]=
+                                       $file;
+                                 }
                               }
-                              $oc=call_user_func(
-                                    $saddr['functions']['modules']
-                                    [$file]['getClass']);
-                              $saddr['modules']['objectclass'][$oc['search']]=
-                                 $file;
                            }
                         }
                      }
@@ -116,6 +149,17 @@ function saddr_includeModules(&$saddr)
    }
 
    return TRUE;
+}
+
+function saddr_setLdapObjectClasses(&$saddr, $oc)
+{
+   $saddr['ldap']['objectclass']=$oc;
+   return TRUE;
+}
+
+function saddr_getLdapObjectClasses(&$saddr)
+{
+   return $saddr['ldap']['objectclass'];
 }
 
 function saddr_setUser(&$saddr, $user)

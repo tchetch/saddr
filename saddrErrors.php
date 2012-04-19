@@ -11,6 +11,7 @@ define('SADDR_ERR_LDAP_VERSION',          0x0003);
 define('SADDR_ERR_LDAP_BASE',             0x0004);
 define('SADDR_ERR_LDAP_BIND',             0x0005);
 define('SADDR_ERR_LDAP_ANONYMOUS_BIND',   0x0006);
+define('SADDR_ERR_LDAP_OBJECTCLASS',      0x0007);
 
 define('SADDR_ERR_NOT_STRING',            0x0100);
 
