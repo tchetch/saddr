@@ -7,11 +7,13 @@
 <head>
 <script src="{saddr_dojo}" data-dojo-config="parseOnLoad: true" ></script>
 <script>
+dojo.require('dijit.form.Form');
 dojo.require('dijit.form.TextBox');
 dojo.require('dijit.form.NumberTextBox');
 dojo.require('dijit.form.Textarea');
 dojo.require('dijit.form.DateTextBox');
 dojo.require('dijit.form.FilteringSelect');
+dojo.require('dijit.Tooltip');
 </script>
 <title>saddr</title>
 <link rel="stylesheet" href="css/default/default.css" type="text/css" />
@@ -25,7 +27,9 @@ dojo.require('dijit.form.FilteringSelect');
 	{if isset($saddr) && isset($saddr.search_results) && 
 	  isset($saddr.search_results.__edit)}
      <div id="edit">
-		<form method="post" action="{saddr_url op="doAddOrEdit"}">
+		<form method="post" action="{saddr_url op="doAddOrEdit"}" 
+			data-dojo-type="dijit.form.Form" 
+			onsubmit="if(this.validate()) { return true; } else { return false; }">
 		{if isset($saddr.search_results.id)}<input type="hidden" name="id" 
 			value="{$saddr.search_results.id}" />{/if}
 		{if isset($saddr.search_results.module)}<input type="hidden" 

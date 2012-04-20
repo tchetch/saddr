@@ -215,6 +215,11 @@ function s2s_displaySmartyEntry($params, $smarty)
       $module=$params['module'];
    }
 
+   $required='';
+   if(isset($params['must'])) {
+      $required='required="true" data-dojo-props="required:true"';
+   }
+
    $display_label_on_view=FALSE;
    if(isset($params['labelonview'])) $display_label_on_view=TRUE;
 
@@ -236,28 +241,33 @@ function s2s_displaySmartyEntry($params, $smarty)
       $html.='<label for="'.
          $name.'" class="saddr_label">'.$label.'</label>';
       switch($type[0]) {
-         case 'dijitTextBox':
          case 'dijitDateTextBox':
+         case 'dijitTextBox':
             foreach($v_entry as $v) {
                $html.='<input type="textbox" name="'.$name.'" '.
                   'value="'.$v.'" '.
+                  $required.' '.
                   'class="saddr_value saddr_textbox" '.
                   'data-dojo-type="'.$type[1].'" />';
                if(!$multi) break;
+               $required='';
             }
             break;
          case 'dijitTextArea':
             foreach($v_entry as $v) {
                $html.='<textarea name="'.$name.'" '.
                   'class="saddr_value saddr_textarea" '.
+                  $required.' '.
                   'data-dojo-type="'.$type[1].'">'.
                   $v.'</textarea>';
                if(!$multi) break;
+               $required=''; /* Required value need, at least, 1 value */
             }
             break;
          case 'saddrTagsArea':
             $html.='<textarea name="'.$name.'" '.
                'class="saddr_value saddr_textarea" '.
+                $required.' '.
                'data-dojo-type="'.$type[1].'">';
             foreach($v_entry as $v) {
                $html.=$v;
@@ -282,6 +292,7 @@ function s2s_displaySmartyEntry($params, $smarty)
                      $res=saddr_list($saddr['handle'], $module, $attributes);
                      $html.='<select name="'.$name.'"'.
                         ' class="saddr_value saddr_select"'.
+                        ' '.$required.
                         ' data-dojo-type="'.$type[1].'">';
                      $html.='<option value=""></option>';
                      foreach($res as $select) {
@@ -302,6 +313,7 @@ function s2s_displaySmartyEntry($params, $smarty)
                   }
                }   
                if(!$multi) break;
+               $required='';
             }
             break;
       }

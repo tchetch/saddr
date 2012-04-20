@@ -2,7 +2,7 @@
 
 <div id="saddrBusiness" class="saddr_section saddr_sectionLeft">
 <h2>Business</h2>
-{saddr_entry e="company" label="Company" searchable=1}
+{saddr_entry e="company" label="Company" searchable=1 must=1}
 {saddr_entry e="branch" label="Branch"}
 {saddr_entry e="work_address" label="Address" type="textarea"}
 {saddr_entry e="work_npa" label="Postal code"}
@@ -15,7 +15,7 @@
 
 <div id="saddrIroBank" class="saddr_section saddr_sectionRight">
 <h2>Bank</h2>
-{saddr_entry e="swift" label="SWIFT / BIC" searchable=1 labelonview=1}
+{saddr_entry e="swift" label="SWIFT / BIC" searchable=1 labelonview=1 must=1}
 {saddr_entry e="clearing" label="Clearing number" searchable=1 labelonview=1}
 {saddr_entry e="postalaccount" label="Postal account" searchable=1 labelonview=1}
 </div>

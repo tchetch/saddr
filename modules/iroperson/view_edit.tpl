@@ -2,8 +2,8 @@
 
 <div id="saddrNames" class="saddr_section saddr_sectionLeft">
 {saddr_entry e="title" label="Title"}
-{saddr_entry e="firstname" label="Firstname" multi=1}
-{saddr_entry e="lastname" label="Lastname" searchable=1}
+{saddr_entry e="firstname" label="Firstname" multi=1 must=1}
+{saddr_entry e="lastname" label="Lastname" searchable=1 must=1}
 </div>
 
 <div id="saddrBusiness" class="saddr_section saddr_sectionLeft">
