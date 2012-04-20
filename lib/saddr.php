@@ -10,7 +10,7 @@ function saddr_init()
    $saddr=array(
          'ldap'=>array(
             'handle'=>NULL,
-            'base'=>'',
+            'base'=>array(),
             'host'=>'localhost',
             /* User and pass to NULL => Anonymous auth */
             'user'=>NULL,
@@ -271,6 +271,7 @@ function saddr_getFromFunction(&$saddr, $type, $func, $params=array())
    $ret=NULL;
    if(!empty($type) && is_string($type)) {
       $type=strtolower($type);
+      
       if(function_exists($saddr['functions']['modules'][$type][$func])) {
          $ret=call_user_func_array(
                $saddr['functions']['modules'][$type][$func], $params);
@@ -280,9 +281,50 @@ function saddr_getFromFunction(&$saddr, $type, $func, $params=array())
    return $ret;
 } 
 
+/* When a new base is added and is similar with an actual one but more
+   specific, the most specific is kept (ou=saddr,o=x,dc=y & o=x,dc=y => 
+   ou=saddr,o=x,dc=y is kept)
+
+   The last one to come in is used for new entry.
+ */
 function saddr_setLdapBase(&$saddr, $base)
 {
-   $saddr['ldap']['base']=$base;
+   $do_add=TRUE;
+
+   $e_base=explode(',', $base);
+   $count_e_base=count($e_base);
+   
+   foreach($saddr['ldap']['base'] as $k=>$b) {
+      if($b==$base) {
+         $do_add=FALSE;
+         break;
+      }
+      
+      $e_b=explode(',', $b);   
+      $count_e_b=count($e_b);
+      $x=$e_base;
+      $y=$e_b;
+      $biggest='';
+      if($count_e_base>$count_e_b) {
+         $biggest=$base;
+         for($i=0;$i<($count_e_base-$count_e_b);$i++) {
+            array_shift($x);
+         }
+      } else if($count_e_base<$count_e_b) {
+         $biggest=$b;
+         for($i=0;$i<($count_e_b-$count_e_base);$i++) {
+            array_shift($y);
+         }
+      }
+      if(implode(',', $x)==implode(',', $y)) {
+         $saddr['ldap']['base'][$k]=$biggest;
+         $do_add=FALSE;
+         break;
+      }
+   }
+   if($do_add) {
+      array_unshift($saddr['ldap']['base'], $base);
+   }
    return TRUE;
 }
 

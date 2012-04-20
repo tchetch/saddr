@@ -84,7 +84,9 @@ if(is_string($ldap_host)) {
          /* Find directory base, take the first found */
          if($Ldap!=NULL) {
             if(($bases=tch_getLdapBases($Ldap, $root_dse))!==FALSE) {
-               saddr_setLdapBase($Saddr, $bases[0]);
+               foreach($bases as $b) {
+                  saddr_setLdapBase($Saddr, $b);
+               }
             } else {
                saddr_setError($Saddr, SADDR_ERR_LDAP_BASE, __FILE__,
                      __LINE__);

@@ -28,17 +28,16 @@ function saddr_add(&$saddr, $smarty_entry)
                      $ldap_entry[$rdn_attrs['principal']][0];
 
                $dn='';
-               $e=saddr_read($saddr, $rdn.','. saddr_getLdapBase($saddr),
-                     array('name'));
+               $bases=saddr_getLdapBase($saddr);
+               $e=saddr_read($saddr, $rdn.','. $bases[0], array('name'));
                if($e==FALSE) {
-                  $dn=$rdn.','.saddr_getLdapBase($saddr);
+                  $dn=$rdn.','.$bases[0];
                } else {
                   foreach($rdn_attrs['multi'] as $m_rdn) {
                      if(isset($ldap_entry[$m_rdn])) {
                         $rdn.='+'.$m_rdn.'='.$ldap_entry[$m_rdn][0];
-                        if(!saddr_read($saddr, $rdn.','.
-                                 saddr_getLdapBase($saddr))){
-                           $dn=$rdn.','.saddr_getLdapBase($saddr);
+                        if(!saddr_read($saddr, $rdn.','. $bases[0])){
+                           $dn=$rdn.','.$bases[0];
                            break;
                         }
                      }

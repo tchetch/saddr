@@ -31,17 +31,20 @@ function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array())
 
    $ldap_search_filter=saddr_getSearchFilter($saddr, $search_on, $search);
    if(!empty($ldap_search_filter)) {
-      $ldap=saddr_getLdap($saddr);
-
-      $s_res=ldap_search($ldap, saddr_getLdapBase($saddr), $ldap_search_filter,
-            $ldap_attrs);
       
-      if($s_res) {
-         $entries=ldap_get_entries($ldap, $s_res);
-         for($i=0;$i<$entries['count'];$i++) {
-            $_sent=saddr_makeSmartyEntry($saddr, $entries[$i]);
-            if(isset($_sent['name'])) {
-               $smarty_entries[]=$_sent;
+      $ldap=saddr_getLdap($saddr);
+      $bases=saddr_getLdapBase($saddr);
+      
+      foreach($bases as $base) {
+         $s_res=ldap_search($ldap, $base, $ldap_search_filter, $ldap_attrs);
+      
+         if($s_res) {
+            $entries=ldap_get_entries($ldap, $s_res);
+            for($i=0;$i<$entries['count'];$i++) {
+               $_sent=saddr_makeSmartyEntry($saddr, $entries[$i]);
+               if(isset($_sent['name'])) {
+                  $smarty_entries[]=$_sent;
+               }
             }
          }
       }
