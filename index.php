@@ -60,12 +60,8 @@ if(tch_isIncludable('saddr.index.local.php')) {
 
 /* Strip slashes if magic_quotes are on */
 if(get_magic_quotes_gpc()) {
-   foreach($_POST as $k=>$value) {
-      $_POST[$k]=stripslashes($value);
-   }
-   foreach($_GET as $k=>$value) {
-      $_GET[$k]=stripslashes($value);
-   }
+   tch_stripSlashes($_POST);
+   tch_stripSlashes($_GET);
 }
 
 /* INIT LDAP */
