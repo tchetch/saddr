@@ -58,6 +58,16 @@ if(tch_isIncludable('saddr.index.local.php')) {
    }
 }
 
+/* Strip slashes if magic_quotes are on */
+if(get_magic_quotes_gpc()) {
+   foreach($_POST as $k=>$value) {
+      $_POST[$k]=stripslashes($value);
+   }
+   foreach($_GET as $k=>$value) {
+      $_GET[$k]=stripslashes($value);
+   }
+}
+
 /* INIT LDAP */
 $Ldap=NULL;
 $ldap_host=saddr_getLdapHost($Saddr);
@@ -152,7 +162,6 @@ if(is_string($ldap_host)) {
 if($Ldap==NULL) {
    saddr_setUserMessage($Saddr, 'Failed to connect to server');
 }
-
 
 /* Search proxy to generate encrypted search query */
 if(isset($_POST['saddrGoSearch'])) {
