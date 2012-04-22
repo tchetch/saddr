@@ -538,17 +538,19 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
       if(count($modules)==1) {
          $module=$modules[0];
       } else {
+         $last_same_class_count=-1;
          foreach($modules as $m) {
             $classes=saddr_getClass($saddr, $m);
             $flat_classes=array($classes['structural']);
             foreach($classes['auxiliary'] as $c) $flat_classes[]=$c;
-            $found=TRUE;
+
+            $same_classes=0;
             foreach($oc as $c) {
-               if(!in_array($c, $flat_classes)) $found=FALSE;
+               if(in_array($c, $flat_classes)) $same_classes++;
             }
-            if($found) {
-               $module=$m; 
-               break;
+            if($same_classes>$last_same_class_count) {
+               $last_same_class_count=$same_classes;
+               $module=$m;
             }
          }
 

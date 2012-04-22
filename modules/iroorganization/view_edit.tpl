@@ -16,9 +16,11 @@
 <div id="saddrOthers" class="saddr_section saddr_sectionRight">
 <h2>Others</h2>
 {saddr_entry e="description" label="Description" type="textarea"}
+{saddr_entry e="tags" label="Tags" labelonview=1 type="tag"}
+{saddr_entry e="restricted_tags" label="Restricted tags" labelonview=1 type="tag"}
 </div>
 
-<div id="saddrInternet" class="saddr_section saddr_sectionLeft">
+<div id="saddrInternet" class="saddr_section saddr_sectionRight">
 <h2>Internet</h2>
 {saddr_entry e="work_email" label="Professional email" labelonview=1 multi=1}
 {saddr_entry e="url" label="URL" labelonview=1 multi=1}

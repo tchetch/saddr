@@ -33,6 +33,11 @@ function ext_iroorganization_getAttrs()
       'mail'=>'work_email',
       'labeleduri'=>'url',
       'physicaldeliveryofficename'=>'branch',
+      'marker'=>'tags',
+      'custom1'=>'restricted_tags',
+      'custom2'=>'tags',
+      'custom3'=>'tags',
+      'custom4'=>'tags',
       'description'=>'description'
       );
 }
@@ -49,7 +54,7 @@ function ext_iroorganization_getClass()
    return array(
          'search'=>'organization',
          'structural'=>'organization', 
-         'auxiliary'=> array('iroorganizationextended'));
+         'auxiliary'=> array('iroorganizationextended', 'contactperson'));
 }
 
 function ext_iroorganization_getTemplates()
