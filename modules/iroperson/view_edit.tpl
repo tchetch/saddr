@@ -42,7 +42,7 @@
 <p>
 {saddr_entry e="bank" label="Establishment" 
    type="sselect" module="irobank"
-   attributes=array('company', 'branch') format="%s, %s"}
+   format="##company## ##, ~branch##"}
 {saddr_entry e="iban" label="IBAN" labelonview=1}
 </div>
 {/saddr_when_module_available}

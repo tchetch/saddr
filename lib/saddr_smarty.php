@@ -278,18 +278,9 @@ function s2s_displaySmartyEntry($params, $smarty)
          case 'saddrSelect':
             if(!isset($module)) return;
             foreach($v_entry as $v) {
-               if(isset($params['attributes'])) {
                   if(isset($params['format']) &&
                         is_string($params['format'])) {
-                     $attributes=array();
-                     if(is_array($params['attributes'])) {
-                        foreach($params['attributes'] as $a) {
-                           $attributes[]=$a;
-                        }
-                     } else {
-                        $attributes[]=$a;
-                     }
-                     $res=saddr_list($saddr['handle'], $module, $attributes);
+                     $res=saddr_list($saddr['handle'], $module);
                      $html.='<select name="'.$name.'"'.
                         ' class="saddr_value saddr_select"'.
                         ' '.$required.
@@ -300,18 +291,12 @@ function s2s_displaySmartyEntry($params, $smarty)
                         $html.='<option value="'.$svalue.'"';
                         if($svalue==$v) $html.=' selected="1"';
                         $html.=' >';
-                        $x=array();
-                        foreach($attributes as $a) { 
-                           if(!empty($select[$a][0])) {
-                              $x[]=$select[$a][0]; 
-                           }
-                        }
-                        $html.=vsprintf($params['format'], $x);
+                        $html.=saddr_ldapPrintf($saddr['handle'], 
+                              $params['format'], $select);
                         $html.='</option>';
                      }
                      $html.='</select>';
                   }
-               }   
                if(!$multi) break;
                $required='';
             }
@@ -374,7 +359,6 @@ function s2s_displaySmartyEntry($params, $smarty)
             $html.='</div>';
             break;
          case 'saddrSelect':
-            if(isset($params['attributes'])) {
                $html.='<div class="saddr_value saddr_'.$type[0];
                if(!isset($with_label)) {
                   $html.=' saddr_valueNoLabel';
@@ -382,27 +366,17 @@ function s2s_displaySmartyEntry($params, $smarty)
                $html.='">';
 
                foreach($entry[$params['e']] as $v) {
-                  $e=saddr_read($saddr['handle'], $v, $params['attributes']);
-                  $x=array();
-                  if(is_array($params['attributes'])) {
-                     foreach($params['attributes'] as $a) {
-                        if(isset($e[$a])) {
-                           $x[]=$e[$a][0];
-                        }
-                     }
-                  } else {
-                     $x[]=$e[$params['attributes']][0];
-                  }
+                  $e=saddr_read($saddr['handle'], $v);
                   $html.='<a href="';
                   $html.=s2s_generateUrl(array('op'=>'view',
                            'id'=>$e['id']), $smarty);
                   $html.='">';
-                  $html.=vsprintf($params['format'], $x);
+                  $html.=saddr_ldapPrintf($saddr['handle'], $params['format'],
+                        $e);
                   $html.='</a>';
                   $html.='</div>';
                   if(!$multi) break;
                }
-            }
       }
    }
 

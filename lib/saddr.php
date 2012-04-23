@@ -394,15 +394,33 @@ function saddr_getLdapAttr(&$saddr, $attrs=array(), $module=NULL)
    $av_attrs=saddr_arrayFlip($av_attributes);
    $ldap_attrs=array();
    foreach($attrs as $a) {
-      if(isset($av_attrs[$a])) {
-         if(is_string($av_attrs[$a])) {
-            if(!in_array($av_attrs[$a], $ldap_attrs)) {
-               $ldap_attrs[]=$av_attrs[$a];
+      if(is_string($a)) {
+         if(isset($av_attrs[$a])) {
+            if(is_string($av_attrs[$a])) {
+               if(!in_array($av_attrs[$a], $ldap_attrs)) {
+                  $ldap_attrs[]=$av_attrs[$a];
+               }
+            } else if(is_array($av_attrs[$a])) {
+               foreach($av_attrs[$a] as $_a) {
+                  if(!in_array($_a, $ldap_attrs)) {
+                     $ldap_attrs[]=$_a;
+                  }
+               }
             }
-         } else if(is_array($av_attrs[$a])) {
-            foreach($av_attrs[$a] as $_a) {
-               if(!in_array($_a, $ldap_attrs)) {
-                  $ldap_attrs[]=$_a;
+         }
+      } else if(is_array($a)) {
+         foreach($a as $at) {
+            if(isset($av_attrs[$at])) {
+               if(is_string($av_attrs[$at])) {
+                  if(!in_array($av_attrs[$at], $ldap_attrs)) {
+                     $ldap_attrs[]=$av_attrs[$at];
+                  }
+               } else if(is_array($av_attrs[$a])) {
+                  foreach($av_attrs[$at] as $_a) {
+                     if(!in_array($_a, $ldap_attrs)) {
+                        $ldap_attrs[]=$_a;
+                     }
+                  }
                }
             }
          }
@@ -443,18 +461,8 @@ function saddr_doAttributesCombination(&$saddr, &$ldap_entry, $module)
 
    foreach($combination as $attr=>$rule) {
       if(!isset($ldap_entry[$attr])) {
-         if(preg_match_all('/\$\$([[:alnum:]]+)\$\$/', $rule, $matches)) {
-            $new_attribute=$rule;
-            foreach($matches[1] as $match) {
-               if(isset($ldap_entry[$match])) {
-                  $new_attribute=preg_replace('/\$\$'.$match.'\$\$/', 
-                        $ldap_entry[$match][0], $new_attribute);
-               } else {
-                  $new_attribute=preg_replace('/\$\$'.$match.'\$\$/', 
-                        '', $new_attribute);
-               }
-            }
-            $new_attribute=trim($new_attribute);
+         $new_attribute=saddr_ldapPrintf($saddr, $rule, $ldap_entry);
+         if($new_attribute!=$rule) {
             $ldap_entry[$attr]=array($new_attribute);
          }
       }
@@ -860,6 +868,48 @@ function saddr_getEncPass(&$saddr)
          return __FILE__ . $_SERVER['SERVER_NAME'] . $_SERVER['SERVER_ADDR'];
       }
    }
+}
+
+function saddr_ldapPrintf(&$saddr, $format, $entry)
+{
+   if(preg_match_all('/'.
+            '(?<!\\\\)[\$|#]{2,2}'.
+            '(?:'.
+               '([^~\$#)]*)'.
+               '~'.
+            '){0,1}'.
+            '([[:alnum:]]+)'.
+            '(?:'.
+               '~'.
+               '([^~\$#)]*)'.
+            '){0,1}'.
+            '(?<!\\\\)[\$|#]{2,2}'.
+            '/', $format, $matches))
+   {
+      $replace=$matches[0];
+      $pre=$matches[1];
+      $attribute=$matches[2];
+      $post=$matches[3];
+      if(count($replace)>0) {
+         for($i=0;$i<count($attribute);$i++) {
+            if(!empty($attribute[$i])) {
+               if(isset($entry[$attribute[$i]]) &&
+                     count($entry[$attribute[$i]])>0) {
+                  $new_val='';
+                  if(!empty($pre[$i])) $new_val.=$pre[$i];
+                  $new_val.=$entry[$attribute[$i]][0];
+                  if(!empty($post[$i])) $new_val.=$post[$i];
+                  $format=str_replace($replace[$i], $new_val, $format);
+               } else {
+                  $format=str_replace($replace[$i], '', $format);
+               }
+            } else {
+               $format=str_replace($replace[$i], '', $format);
+            }
+         }
+      }
+   }
+   return $format;
 }
 
 include(dirname(__FILE__).'/read.php');
