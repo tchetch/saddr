@@ -479,6 +479,7 @@ function saddr_makeLdapEntry(&$saddr, $smarty_entry)
       foreach($attrs as $attr=>$s_attrs) {
          if(is_array($s_attrs)) {
             foreach($s_attrs as $s_attr) {
+               if(substr_compare($s_attr, '_saddr', 0, 6)==0) continue;
                if(isset($smarty_entry[$s_attr])) {
                   if(!isset($ldap_entry[$attr])) $ldap_entry[$attr]=array();
                   if(is_array($smarty_entry[$s_attr])) {
@@ -491,6 +492,7 @@ function saddr_makeLdapEntry(&$saddr, $smarty_entry)
                }
             }
          } else {
+            if(substr_compare($s_attrs, '_saddr', 0, 6)==0) continue;
             if(isset($smarty_entry[$s_attrs])) {
                if(!isset($ldap_entry[$attr])) $ldap_entry[$attr]=array();
                if(is_array($smarty_entry[$s_attrs])) {
