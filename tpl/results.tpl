@@ -1,36 +1,18 @@
 <h1>Search results</h1>
 {if isset($saddr.search_results)}
-<table class="saddrSearchResults">
-<tr>
-	<th>Name</th>
-	<th>Mail</th>
-	<th>Telephone</th>
-	<th>Mobile</th>
-</tr>
-{foreach $saddr.search_results as $res}
-<tr class="{if $res@index % 2 == 0}odd{else}even{/if}">
-	<td class="name"><a href="{saddr_url op="view" id=$res.id}" title="View details">{if isset($res.displayname)}{$res.displayname.0}
-		{else}{$res.name.0}{/if}</a>
-		</td>
-	<td class="mail">{if isset($res.work_email)}<a href="mailto:{$res.work_email.0}">{$res.work_email.0}</a>
-		{elseif isset($res.home_email)}<a href="mailto:{$res.home_email.0}">{$res.home_email.0}</a>
-		{else}{/if}</td>
-	<td>{if isset($res.work_telephone)}<a href="callto:{$res.work_telephone.0}">{$res.work_telephone.0}</a>
-		{elseif isset($res.home_telephone)}<a href="callto:{$res.home_telephone.0}">{$res.home_telephone.0}</a>
-		{else}{/if}</td>
-	<td>{if isset($res.work_mobile)}<a href="callto:{$res.work_mobile.0}">{$res.work_mobile.0}</a>
-		{elseif isset($res.home_mobile)}<a href="callto:{$res.home_mobile.0}">{$res.home_mobile.0}</a>
-		{else}{/if}</td>
-</tr>
-{if isset($res.company)}
-<tr class="{if $res@index % 2 == 0}odd{else}even{/if}">
-<td class="last"></td>
-<td colspan="3" class="last">
-<a href="{saddr_url op="doSearchForCompany" search={saddr_encrypt value=$res.company.0}}"
- title="Search for {$res.company.0}">{$res.company.0}</a>
-</td>
-</tr>
-{/if}
+{foreach $saddr.search_results as $e}
+<div class="saddr_resultLine {if $e@iteration is odd by 1}saddr_resultLineOdd{/if}">
+<span class="saddr_res0 saddr_resField"
+  ><a href="{saddr_url op="view" id=$e.id}" title="View {$e.name.0}">
+{if isset($e._saddr_res0)}{$e._saddr_res0.0}{else}{$e.name.0}{/if}</a>
+</span>
+<span class="saddr_res1 saddr_resField"
+  >{if isset($e._saddr_res1)}{$e._saddr_res1.0}{/if}</span>
+<span class="saddr_res2 saddr_resField"
+  >{if isset($e._saddr_res2)}{$e._saddr_res2.0}{/if}</span>
+<span class="saddr_res3 saddr_resField"
+  >{if isset($e._saddr_res3)}{$e._saddr_res3.0}{/if}</span>
+</div>
 {/foreach}
 </table>
 {else}

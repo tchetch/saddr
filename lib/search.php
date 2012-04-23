@@ -12,7 +12,7 @@ function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array())
    if(empty($attrs)) {
       $attrs=array('name', 'displayname', 'work_telephone', 'work_email', 
             'home_telephone', 'home_email', 'work_fax', 'home_fax',
-            'work_mobile', 'home_mobile');
+            'work_mobile', 'home_mobile', 'branch');
    }
    if(empty($search_on)) {
       $search_on=array('name', 'company', 'displayname', 'lastname', 'firstname', 

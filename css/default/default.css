@@ -11,28 +11,6 @@ h1 { font-size: 1.6em; }
 h2 { font-size: 1.2em; }
 h3 { font-size: 1em; }
 
-table.saddrSearchResults { 
-	border-spacing: 0;
-	width: 100%;
-}
-table.saddrSearchResults td.name {
-	width: 30%;
-}
-table.saddrSearchResults td.mail {
-	width: 30%;
-}
-table.saddrSearchResults td {
-	padding-top: 3px;
-	width: 20%;
-}
-table.saddrSearchResults td.last {
-	border-bottom: 1px dotted black;
-	padding-bottom: 3px;
-}
-table.saddrSearchResults tr.odd {
-	background-color: #DDFFBB;
-}
-
 div#saddr_searchBoxes {
 	background-color: gray;
 	color: white;
@@ -141,4 +119,36 @@ div#edit .saddr_value {
 .saddr_groupOfValue {
    clear: both; margin-top: 5px;
    width: 100%; overflow: hidden;
+}
+
+.saddr_resultLine {
+   line-height: 2em;
+}
+
+.saddr_resultLine:hover {
+   background-color: #D9D9D9;
+}
+
+.saddr_resultLineOdd {
+   background-color: #F9F9F9;
+}
+
+.saddr_resField {
+   display: inline-block;
+}
+
+.saddr_res0 {
+   width: 24%;
+}
+
+.saddr_res1 {
+   width: 29%;
+}
+
+.saddr_res2 {
+   width: 15%;
+}
+
+.saddr_res3 {
+   width: 28%;
 }
