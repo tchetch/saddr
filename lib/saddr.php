@@ -868,5 +868,7 @@ include(dirname(__FILE__).'/list.php');
 include(dirname(__FILE__).'/add.php');
 include(dirname(__FILE__).'/modify.php');
 include(dirname(__FILE__).'/delete.php');
+include(dirname(__FILE__).'/saddr_smarty.php');
+include(dirname(__FILE__).'/saddr_ldap.php');
 
 ?>
