@@ -29,7 +29,7 @@ function saddr_add(&$saddr, $smarty_entry)
 
                $dn='';
                $bases=saddr_getLdapBase($saddr);
-               $e=saddr_read($saddr, $rdn.','. $bases[0], array('name'));
+               $e=@saddr_read($saddr, $rdn.','. $bases[0], array('name'));
                if($e==FALSE) {
                   $dn=$rdn.','.$bases[0];
                } else {
