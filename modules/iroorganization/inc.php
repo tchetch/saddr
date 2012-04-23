@@ -68,8 +68,28 @@ function ext_iroorganization_getAttributesCombination()
    return array();
 }
 
-function ext_iroorganization_processAttributes($attributes, $values)
+function ext_iroorganization_processAttributes($attribute, $values)
 {
+   switch($attribute) {
+      case 'marker':
+      case 'custom1':
+      case 'custom2':
+      case 'custom3':
+      case 'custom4':
+         $ret=array();
+         foreach($values as $_values) {
+            $v=explode(',', $_values);
+            foreach($v as $_v) {
+               $_v=trim($_v);
+               if(!empty($_v)) {
+                  $ret[]=$_v;
+               }
+            }
+         }
+         return $ret;
+         break;
+      default: return FALSE;
+   }
    return FALSE;
 }
 
