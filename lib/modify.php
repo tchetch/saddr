@@ -41,18 +41,29 @@ function saddr_modify(&$saddr, $smarty_entry)
          }
 
          $need_rename=FALSE;
+         $skip_rename=FALSE;
 
+         $ldap_attrs=saddr_getAttrs($saddr, $smarty_entry['module']);
          foreach($rdn_components as $attr=>$val) {
-            if(!isset($ldap_entry[$attr])) {
-               $need_rename=TRUE; break;
-            } else {
-               $ok=FALSE;
-               foreach($ldap_entry[$attr] as $_v) {
-                  if($_v==$val) $ok=TRUE;
-               }
-               if(!$ok) {
-                  $need_rename=TRUE;
-                  break;
+            if(!isset($ldap_attrs[$attr])) {
+               $skip_rename=TRUE;
+               break;
+            }
+         }
+         
+         if(!$skip_rename) {
+            foreach($rdn_components as $attr=>$val) {
+               if(!isset($ldap_entry[$attr])) {
+                  $need_rename=TRUE; break;
+               } else {
+                  $ok=FALSE;
+                  foreach($ldap_entry[$attr] as $_v) {
+                     if($_v==$val) $ok=TRUE;
+                  }
+                  if(!$ok) {
+                     $need_rename=TRUE;
+                     break;
+                  }
                }
             }
          }
