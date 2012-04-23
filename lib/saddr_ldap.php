@@ -33,7 +33,7 @@ function saddr_prepareLdapConnection(&$saddr)
             }
 
             if(tch_canTryStartTls($ldap_handle, $root_dse)) {
-               ldap_start_tls($ldap_handle)); 
+               ldap_start_tls($ldap_handle); 
             }
 
             /* Find directory base, take the first found */
