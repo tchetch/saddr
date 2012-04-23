@@ -1,8 +1,13 @@
 <?PHP
+/* (c) 2012 Etienne Bagnoud
+   This file is part of saddr project. saddr is under the MIT license.
+
+   See LICENSE file
+ */
 
 function saddr_prepareLdapConnection(&$saddr)
 {
-   $ldap_handel=NULL;
+   $ldap_handle=NULL;
 
    $ldap_host=saddr_getLdapHost($saddr);
    if(is_string($ldap_host)) {
@@ -25,6 +30,10 @@ function saddr_prepareLdapConnection(&$saddr)
                saddr_setError($saddr, SADDR_ERR_LDAP_VERSION, __FILE__, __LINE__);
                ldap_close($ldap_handle);
                $ldap_handle=NULL;
+            }
+
+            if(tch_canTryStartTls($ldap_handle, $root_dse)) {
+               ldap_start_tls($ldap_handle)); 
             }
 
             /* Find directory base, take the first found */
