@@ -132,14 +132,36 @@ saddr_setSmarty($Saddr, $Smarty);
 
 saddr_includeModules($Saddr);
 
+$home_display=array();
+foreach($Saddr['modules']['names'] as $mod) {
+   $tpl=saddr_getTemplates($Saddr, $mod);
+   if(isset($tpl['home'])) {
+      $home_display[]=array(saddr_getModuleDirectory($Saddr).'/'.
+         $mod.'/'.$tpl['home'], $mod);
+   }
+}
+
 $saddr_results=array(
       'display'=>'home.tpl',
+      '__home_display'=>$home_display,
       'handle'=>&$Saddr
       );
 
 /* Operations */
 if(isset($_GET['op'])) {
    switch($_GET['op']) {
+      case 'list':
+         if(isset($_GET['module'])) {
+            $module=saddr_urlDecrypt($Saddr, $_GET['module']);
+            if(is_string($module)) {
+               $search=saddr_list($Saddr, $module);
+               $saddr_results['display']='results.tpl';
+               if(!empty($search)) {
+                  $saddr_results['search_results']=$search;
+               }
+            }
+         }
+         break;
       case 'doTagSearch':
          if(isset($_GET['search'])) {
             $search_string=saddr_urlDecrypt($Saddr, $_GET['search']);

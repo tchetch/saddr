@@ -60,7 +60,8 @@ function ext_iroorganization_getClass()
 function ext_iroorganization_getTemplates()
 {
    return array('view'=>'view_edit.tpl',
-         'edit'=>'view_edit.tpl');
+         'edit'=>'view_edit.tpl',
+         'home'=>'home.tpl');
 }
 
 function ext_iroorganization_getAttributesCombination()

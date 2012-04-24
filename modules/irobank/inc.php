@@ -47,7 +47,8 @@ function ext_irobank_getClass()
 function ext_irobank_getTemplates()
 {
    return array('view'=>'view_edit.tpl',
-         'edit'=>'view_edit.tpl');
+         'edit'=>'view_edit.tpl',
+         'home'=>'home.tpl');
 }
 
 function ext_irobank_getRdnAttributes() {

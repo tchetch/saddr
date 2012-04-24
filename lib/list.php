@@ -15,15 +15,23 @@ function saddr_list(&$saddr, $module, $attrs=array())
    if(empty($ldap_attrs)) return array();
 
    $oc=saddr_getClass($saddr, $module);
-   $ldap_search_filter='(objectclass='.$oc['search'].')';
+   $ldap_search_filter='(objectclass='.$oc['structural'].')';
+   $with_aux=FALSE;
+   foreach($oc['auxiliary'] as $c) {
+      $ldap_search_filter.='(objectclass='.$c.')';
+      $with_aux=TRUE;
+   }
+   if($with_aux) {
+      $ldap_search_filter='(&'.$ldap_search_filter.')';
+   }
 
    $ldap=saddr_getLdap($saddr);
    $bases=saddr_getLdapBase($saddr);
 
+   $smarty_entries=array();
    foreach($bases as $base) {
       $s_res=ldap_search($ldap, $base, $ldap_search_filter, $ldap_attrs);
    
-      $smarty_entries=array();
       if($s_res) {
          $entries=ldap_get_entries($ldap, $s_res);
          for($i=0;$i<$entries['count'];$i++) {

@@ -66,7 +66,8 @@ function ext_iroperson_getClass()
 function ext_iroperson_getTemplates()
 {
    return array('view'=>'view_edit.tpl',
-         'edit'=>'view_edit.tpl');
+         'edit'=>'view_edit.tpl',
+         'home'=>'home.tpl');
 }
 
 function ext_iroperson_getRdnAttributes()

@@ -138,7 +138,7 @@ function s2s_generateUrl($params, $smarty)
    $base_filename=saddr_getBaseFileName($saddr['handle']);
 
    if(isset($params['encrypt'])) {
-      foreach(array('id', 'search', 'attribute') as $p) {
+      foreach(array('id', 'search', 'attribute', 'module') as $p) {
          if(isset($params[$p])) {
             $params[$p]=s2s_encUrl(array('value'=>$params[$p]), $smarty);
          }
@@ -149,6 +149,9 @@ function s2s_generateUrl($params, $smarty)
    if(isset($params['op'])) {
       switch($params['op']) {
          default: break;
+         case 'list':
+            $url.='?op='.$params['op'].'&module='.$params['module'];
+            break;
          case 'preAdd':
          case 'doAddOrEdit':
             $url.='?op='.$params['op']; break;
@@ -207,6 +210,11 @@ function s2s_displaySmartyEntry($params, $smarty)
       }
    }
 
+   $edit_only=FALSE;
+   if(isset($params['edit_only'])) {
+      $edit_only=TRUE;
+   }
+
    if(isset($params['label']) && is_string($params['label'])) {
       $label=$params['label'];
    }
@@ -227,7 +235,7 @@ function s2s_displaySmartyEntry($params, $smarty)
    if(isset($params['multi'])) $multi=TRUE;
 
    $html='<div class="saddr_groupOfValue">';
-   if(isset($entry['__edit'])) {
+   if(isset($entry['__edit']) || $edit_only) {
       $name=$params['e'];
       if($multi) $name=$name.'[]';
 

@@ -13,7 +13,7 @@
 
 <div id="saddrBusiness" class="saddr_section saddr_sectionLeft">
 <h2>Business</h2>
-{saddr_entry e="company" label="Company" searchable=1 must=1}
+{saddr_entry e="company" label="Bank" searchable=1 must=1}
 {saddr_entry e="branch" label="Branch"}
 {saddr_entry e="work_address" label="Address" type="textarea"}
 {saddr_entry e="work_npa" label="Postal code"}
