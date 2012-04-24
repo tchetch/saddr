@@ -190,7 +190,11 @@ function s2s_generateUrl($params, $smarty)
 function s2s_displaySmartyEntry($params, $smarty)
 {
    $saddr=$smarty->getTemplateVars('saddr');
-   $entry=$saddr['search_results'];
+   if(isset($saddr['search_results'])) {
+      $entry=$saddr['search_results'];
+   } else {
+      $entry=array();
+   }
 
    if(!isset($params['e'])) { return; }
 
