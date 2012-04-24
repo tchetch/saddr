@@ -409,13 +409,13 @@ function saddr_getLdapAttr(&$saddr, $attrs=array(), $module=NULL)
             }
          }
       } else if(is_array($a)) {
-         foreach($a as $at) {
+         foreach($a as $at) { 
             if(isset($av_attrs[$at])) {
                if(is_string($av_attrs[$at])) {
                   if(!in_array($av_attrs[$at], $ldap_attrs)) {
                      $ldap_attrs[]=$av_attrs[$at];
                   }
-               } else if(is_array($av_attrs[$a])) {
+               } else if(is_array($av_attrs[$at])) {
                   foreach($av_attrs[$at] as $_a) {
                      if(!in_array($_a, $ldap_attrs)) {
                         $ldap_attrs[]=$_a;
