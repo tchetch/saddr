@@ -682,7 +682,8 @@ function saddr_getTempDir(&$saddr)
    return $saddr['dir']['temp'];
 }
 
-function saddr_getSearchFilter(&$saddr, $attrs, $search_val, $modules=array())
+function saddr_getSearchFilter(&$saddr, $attrs, $search_val, $modules=array(),
+      $search_operator='=')
 {
    /* No module specified is all modules selected */
    if(empty($modules)) {
@@ -690,6 +691,20 @@ function saddr_getSearchFilter(&$saddr, $attrs, $search_val, $modules=array())
    }
    if(is_string($attrs)) {
       $attrs=array($attrs);
+   }
+   switch($search_operator) {
+      case '=':
+      default:
+         $sop='=';  break;
+      case '<':
+      case '<=':
+         $sop='<='; break;
+      case '>':
+      case '>=':
+         $sop='>='; break;
+      case '~':
+      case '~=':
+         $sop='~='; break;
    }
 
    $all_oc=array();
@@ -736,10 +751,14 @@ function saddr_getSearchFilter(&$saddr, $attrs, $search_val, $modules=array())
 
    $attr_search='';
    if(count($all_attrs)==1) {
-      $attr_search='('.$all_attrs[0].'='.$search_val.')';
+      $attr_search='(|('.$all_attrs[0].$sop.$search_val.')';
+      $attr_search.='('.$all_attrs[0].$sop.strtolower($search_val).')';
+      $attr_search.='('.$all_attrs[0].$sop.strtoupper($search_val).'))';
    } else {
       foreach($all_attrs as $a) {
-         $attr_search.='('.$a.'='.$search_val.')';
+         $attr_search.='('.$a.$sop.$search_val.')';
+         $attr_search.='('.$a.$sop.strtolower($search_val).')';
+         $attr_search.='('.$a.$sop.strtoupper($search_val).')';
       }
       $attr_search='(|'.$attr_search.')';
    }

@@ -194,7 +194,10 @@ if(isset($_GET['op'])) {
          if(isset($_GET['search'])) {
             $search_string=saddr_urlDecrypt($Saddr, $_GET['search']);
             if(is_string($search_string)) {
-               $search=saddr_search($Saddr, '*'.$search_string.'*');
+               $search_op='~=';
+               if(strstr($search_string, '*')) $search_op='=';
+               $search=saddr_search($Saddr, $search_string, array(),
+                     array(), $search_op);
                $saddr_results['op']=$_GET['op'];
                /* Reencrypt or you experience some troubles with the browser */
                $saddr_results['search']=saddr_urlEncrypt($saddr, 
@@ -207,7 +210,10 @@ if(isset($_GET['op'])) {
          }
          break;
       case 'doSearchForCompany':
+         $search_op='=';
       case 'doSearchByAttribute':
+         if(!isset($search_op)) $search_op='~=';
+
          $attribute='company';
          if(isset($_GET['attribute'])) {
             $attribute=saddr_urlDecrypt($Saddr, $_GET['attribute']);
@@ -215,7 +221,8 @@ if(isset($_GET['op'])) {
          if(isset($_GET['search'])) {
             $search_string=saddr_urlDecrypt($Saddr, $_GET['search']);
             if(is_string($search_string)) {
-               $search=saddr_search($Saddr, $search_string, array($attribute));
+               $search=saddr_search($Saddr, $search_string, array($attribute),
+                     array(), $search_op);
                $saddr_results['op']=$_GET['op'];
                /* Reencrypt or you experience some troubles with the browser */
                $saddr_results['search']=saddr_urlEncrypt($saddr, 

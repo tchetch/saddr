@@ -5,7 +5,8 @@
    See LICENSE file
  */
 
-function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array())
+function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array(),
+      $search_op='=')
 {
    $smarty_entries=array();
 
@@ -29,7 +30,8 @@ function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array())
    $ldap_attrs=saddr_getLdapAttr($saddr, $attrs);
    if(empty($ldap_attrs)) return array();
 
-   $ldap_search_filter=saddr_getSearchFilter($saddr, $search_on, $search);
+   $ldap_search_filter=saddr_getSearchFilter($saddr, $search_on, $search, 
+         array(), $search_op);
    if(!empty($ldap_search_filter)) {
       
       $ldap=saddr_getLdap($saddr);
