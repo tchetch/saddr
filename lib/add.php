@@ -28,7 +28,7 @@ function saddr_add(&$saddr, $smarty_entry)
                      $ldap_entry[$rdn_attrs['principal']][0];
 
                $dn='';
-               $bases=saddr_getLdapBase($saddr);
+               $bases=saddr_getModuleBase($saddr, $smarty_entry['module']);
                $e=@saddr_read($saddr, $rdn.','. $bases[0], array('name'));
                if($e==FALSE) {
                   $dn=$rdn.','.$bases[0];
@@ -43,7 +43,7 @@ function saddr_add(&$saddr, $smarty_entry)
                      }
                   }
                }
-               
+
                if($dn!='') {
                   $ret=array($dn, ldap_add(saddr_getLdap($saddr), $dn,
                            $ldap_entry));

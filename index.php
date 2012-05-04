@@ -139,8 +139,6 @@ $Smarty->registerPlugin('function', 'saddr_url', 's2s_generateUrl');
 
 saddr_setSmarty($Saddr, $Smarty);
 
-/* Eventually set saddr option */
-
 saddr_includeModules($Saddr);
 
 $home_display=array();

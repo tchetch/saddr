@@ -36,21 +36,20 @@ function saddr_init()
             'dir'=>dirname(__FILE__).'/../modules/',
             'default'=>'',
             'names'=>array(),
-            'objectclass'=>array()
+            'objectclass'=>array(),
+            'bases'=>array()
             ),
          'functions'=>array(
             'modules'=>array(),
             'names'=>array(
-               /* Second argument to TRUE if the function MUST be available,
-                  if it's set to FALSE, the third argument MUST be set to the
-                  return value that indicates "NO OP"
+               /* Second argument to TRUE if the function MUST be available.
                 */
                array('getClass', TRUE),
                array('getAttrs', TRUE),
                array('getTemplates', TRUE),
                array('getRdnAttributes', TRUE),
-               array('getAttributesCombination', FALSE, array()),
-               array('processAttributes', FALSE, FALSE)
+               array('getAttributesCombination', FALSE),
+               array('processAttributes', FALSE)
                )
             ),
          'dir'=>array(
@@ -101,6 +100,9 @@ function saddr_removeModule(&$saddr, $module)
             unset($saddr['modules']['objectclass'][$k]);
             break;
          }
+      }
+      if(isset($saddr['modules']['bases'][$module])) {
+         unset($saddr['modules']['bases'][$module]);
       }
    }
    return TRUE;
@@ -282,6 +284,45 @@ function saddr_getModuleDirectory(&$saddr)
    return $saddr['modules']['dir'];
 }
 
+function saddr_setModuleBase(&$saddr, $module, $base)
+{
+   /* This function runs before modules are included, so we cannot check for
+      module existence.
+    */
+   if(is_string($module)) {
+      if(TRUE) { /* TODO check if base is part of the naming context */
+         $saddr['modules']['bases'][$module]=$base;
+         return TRUE;
+      }
+   }
+
+   return FALSE;
+}
+
+function saddr_getModuleBase(&$saddr, $module)
+{
+   if(saddr_isModuleAvailable($saddr, $module)) {
+      if(isset($saddr['modules']['bases'][$module])) {
+         if(is_string($saddr['modules']['bases'][$module]) &&
+               !empty($saddr['modules']['bases'][$module])) {
+            /* A bit silly, but we might have more than one base for a module */
+            return array($saddr['modules']['bases'][$module]);
+         }
+      }
+   }
+   
+   return saddr_getLdapBase($saddr);
+}
+
+function saddr_getAllLdapBase(&$saddr)
+{
+   $bases=saddr_getLdapBase($saddr);
+   foreach($saddr['modules']['bases'] as $b) {
+      $bases[]=$b;
+   }
+   return $bases;
+}
+
 function saddr_getLdap(&$saddr)
 {
    return $saddr['ldap']['handle'];
@@ -304,19 +345,7 @@ function saddr_getFromFunction(&$saddr, $type, $func, $params=array())
             function_exists($saddr['functions']['modules'][$type][$func])) {
          $ret=call_user_func_array(
                $saddr['functions']['modules'][$type][$func], $params);
-      } else {
-         if($saddr['functions']['names'][1]) {
-            saddr_setError($saddr, SADDR_ERR_MOD_FUNCTION_MISSING, __FILE__,
-                  __LINE__);
-         } else {
-            if(!isset($saddr['functions']['names'][2])) {
-               saddr_setError($saddr, SADDR_ERR_MOD_DEFAULT_RETURN_MISSING,
-                     __FILE__, __LINE__);
-            } else {
-               $ret=$saddr['functions']['names'][2];
-            }
-         }
-      }
+      } 
    }
 
    return $ret;
@@ -401,12 +430,16 @@ function saddr_getAttributesCombination(&$saddr, $type)
 
 function saddr_processAttributes(&$saddr, $type, $params) 
 {
+   $ret = FALSE;
    if(is_array($params) && !empty($params) && count($params)==2) {
-      return saddr_getFromFunction($saddr, $type, 'processAttributes',
+      $ret=saddr_getFromFunction($saddr, $type, 'processAttributes',
             $params);
-   } else {
-      return FALSE;
+      if($ret==NULL) {
+         $ret=FALSE;
+      }
    }
+
+   return $ret;
 }
 
 function saddr_getAllAttrs(&$saddr) 
@@ -499,6 +532,8 @@ function saddr_getModuleByObjectClass(&$saddr, $oc)
 function saddr_doAttributesCombination(&$saddr, &$ldap_entry, $module)
 {
    $combination=saddr_getAttributesCombination($saddr, $module);
+
+   if($combination==NULL) return;
 
    foreach($combination as $attr=>$rule) {
       if(!isset($ldap_entry[$attr])) {

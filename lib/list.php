@@ -13,6 +13,7 @@ function saddr_list(&$saddr, $module, $attrs=array())
    if(!empty($attrs) && !isset($attrs['name'])) $attrs[]='name';
 
    if(!saddr_isModuleAvailable($saddr, $module)) return array();
+   
    $ldap_attrs=saddr_getLdapAttr($saddr, $attrs, $module);
    if(empty($ldap_attrs)) return array();
 
@@ -28,7 +29,7 @@ function saddr_list(&$saddr, $module, $attrs=array())
    }
 
    $ldap=saddr_getLdap($saddr);
-   $bases=saddr_getLdapBase($saddr);
+   $bases=saddr_getModuleBase($saddr, $module);
   
    foreach($bases as $base) {
       $cookie=NULL;

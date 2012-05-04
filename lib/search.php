@@ -35,7 +35,7 @@ function saddr_search(&$saddr, $search, $search_on=array(), $attrs=array(),
    if(!empty($ldap_search_filter)) {
       
       $ldap=saddr_getLdap($saddr);
-      $bases=saddr_getLdapBase($saddr);
+      $bases=saddr_getAllLdapBase($saddr);
       
       foreach($bases as $base) {
          $cookie=NULL;
