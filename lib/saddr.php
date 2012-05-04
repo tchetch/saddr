@@ -41,12 +41,16 @@ function saddr_init()
          'functions'=>array(
             'modules'=>array(),
             'names'=>array(
-               'getClass',
-               'getAttrs',
-               'getTemplates',
-               'getRdnAttributes',
-               'getAttributesCombination',
-               'processAttributes'
+               /* Second argument to TRUE if the function MUST be available,
+                  if it's set to FALSE, the third argument MUST be set to the
+                  return value that indicates "NO OP"
+                */
+               array('getClass', TRUE),
+               array('getAttrs', TRUE),
+               array('getTemplates', TRUE),
+               array('getRdnAttributes', TRUE),
+               array('getAttributesCombination', FALSE, array()),
+               array('processAttributes', FALSE, FALSE)
                )
             ),
          'dir'=>array(
@@ -61,7 +65,7 @@ function saddr_init()
    return $saddr;
 }
 
-function saddr_setError(&$saddr, $id, $file=__FILE__, $line=__LINE__)
+function saddr_setError(&$saddr, $id, $file=-1, $line=-1)
 {
    if(is_integer($id)) {
       $saddr['errors'][microtime()]=array('id'=>$id, 'file'=>$file,
@@ -120,12 +124,11 @@ function saddr_includeModules(&$saddr)
                         if(is_array($fn_list) && !empty($fn_list)) {
                            $all_func=TRUE;
                            foreach($saddr['functions']['names'] as $f_name) {
-                              if(!isset($fn_list[$f_name])) {
+                              if(!isset($fn_list[$f_name[0]]) && 
+                                    $f_name[1] &&
+                                    !function_exists($fn_list[$f_name[0]])) {
                                  $all_func=FALSE;
                                  break;
-                              }
-                              if(!function_exists($fn_list[$f_name])) {
-                                 $all_func=FALSE;
                               }
                            }
                            if($all_func) {
@@ -143,9 +146,9 @@ function saddr_includeModules(&$saddr)
 
                                  if($all_class) {
                                     $saddr['modules']['names'][]=$file;
-                                    foreach($saddr['functions']['names'] as $f) {
-                                       $saddr['functions']['modules'][$file][$f]=
-                                          $fn_list[$f];
+                                    foreach($fn_list as $k=>$f) {
+                                       $saddr['functions']['modules'][$file][$k]=
+                                          $f;
                                     }
                                     $saddr['modules']['objectclass'][$oc['search']]=
                                        $file;
@@ -295,10 +298,24 @@ function saddr_getFromFunction(&$saddr, $type, $func, $params=array())
    $ret=NULL;
    if(!empty($type) && is_string($type)) {
       $type=strtolower($type);
-      
-      if(function_exists($saddr['functions']['modules'][$type][$func])) {
+     
+      if(isset($saddr['functions']['modules'][$type]) &&
+            isset($saddr['functions']['modules'][$type][$func]) &&
+            function_exists($saddr['functions']['modules'][$type][$func])) {
          $ret=call_user_func_array(
                $saddr['functions']['modules'][$type][$func], $params);
+      } else {
+         if($saddr['functions']['names'][1]) {
+            saddr_setError($saddr, SADDR_ERR_MOD_FUNCTION_MISSING, __FILE__,
+                  __LINE__);
+         } else {
+            if(!isset($saddr['functions']['names'][2])) {
+               saddr_setError($saddr, SADDR_ERR_MOD_DEFAULT_RETURN_MISSING,
+                     __FILE__, __LINE__);
+            } else {
+               $ret=$saddr['functions']['names'][2];
+            }
+         }
       }
    }
 

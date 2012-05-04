@@ -12,8 +12,6 @@ function ext_saddr_iroorganization_get_fn_list()
          'getAttrs'=>'ext_iroorganization_getAttrs',
          'getTemplates'=>'ext_iroorganization_getTemplates',
          'getRdnAttributes'=>'ext_iroorganization_getRdnAttributes',
-         'getAttributesCombination'=>
-            'ext_iroorganization_getAttributesCombination',
          'processAttributes'=>'ext_iroorganization_processAttributes'
          );
 }
@@ -62,11 +60,6 @@ function ext_iroorganization_getTemplates()
    return array('view'=>'view_edit.tpl',
          'edit'=>'view_edit.tpl',
          'home'=>'home.tpl');
-}
-
-function ext_iroorganization_getAttributesCombination()
-{
-   return array();
 }
 
 function ext_iroorganization_processAttributes($attribute, $values)

@@ -11,9 +11,7 @@ function ext_saddr_irobank_get_fn_list()
          'getClass'=>'ext_irobank_getClass',
          'getAttrs'=>'ext_irobank_getAttrs',
          'getTemplates'=>'ext_irobank_getTemplates',
-         'getRdnAttributes'=>'ext_irobank_getRdnAttributes',
-         'getAttributesCombination'=>'ext_irobank_getAttributesCombination',
-         'processAttributes'=>'ext_irobank_processAttributes' 
+         'getRdnAttributes'=>'ext_irobank_getRdnAttributes'
          );
 }
 
@@ -57,11 +55,4 @@ function ext_irobank_getRdnAttributes() {
             'iroBankPostalAccount', 'l', 'st', 'c'));
 }
 
-function ext_irobank_getAttributesCombination() {
-   return array();
-}
-
-function ext_irobank_processAttributes($attribute, $values) {
-   return FALSE;
-}
 ?>
