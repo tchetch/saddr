@@ -67,6 +67,17 @@ if(get_magic_quotes_gpc()) {
 $Ldap=saddr_prepareLdapConnection($Saddr);
 if($Ldap==NULL) {
    saddr_setUserMessage($Saddr, 'Failed to connect to server');
+} else {
+
+   if(SADDR_PHP_LDAP_HAS_SERVER_CTRLS) {
+      if(tch_ldapSupportPagedResultControl($Ldap, saddr_getLdapRootDse($Saddr))) {
+         define('SADDR_USE_PAGED_RESULT', TRUE);
+      } else {
+         define('SADDR_USE_PAGED_RESULT', FALSE);
+      }
+   } else {
+         define('SADDR_USE_PAGED_RESULT', FALSE);
+   }
 }
 
 /* Search proxy to generate encrypted search query */

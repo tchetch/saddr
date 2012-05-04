@@ -78,6 +78,10 @@ div.saddr_msgError {
    border: 1px dotted #FF0000;
    background-color: #FFCCCC;
 }
+div.saddr_msgWarning {
+   border: 1px dotted #FFEE00;
+   background-color: #FFEECC;
+}
 div.saddr_msgGood {
    border: 1px dotted #00FF00;
    background-color: #CCFFCC;

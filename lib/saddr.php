@@ -5,6 +5,12 @@
    See LICENSE file
  */
 
+/* To have server ctrls, my patch should be accepted into main PHP distribution.
+   The patch is available https://bugs.php.net/bug.php?id=61921
+ */
+define('SADDR_PHP_LDAP_HAS_SERVER_CTRLS', FALSE);
+      
+
 function saddr_init()
 {
    $saddr=array(
@@ -15,7 +21,8 @@ function saddr_init()
             /* User and pass to NULL => Anonymous auth */
             'user'=>NULL,
             'pass'=>NULL,
-            'objectclass'=>array()
+            'objectclass'=>array(),
+            'rootdse'=>array()
             ),
          'dojo'=>array(
             'path'=>'/dojo/dojo.js',
@@ -48,6 +55,7 @@ function saddr_init()
          'enc'=>array(),
          'errors'=>array(),
          'user_messages'=>array(),
+         'message_registery'=>array(),
          'base_filename'=>'index.php'
          );
    return $saddr;
@@ -66,7 +74,12 @@ function saddr_setError(&$saddr, $id, $file=__FILE__, $line=__LINE__)
 
 function saddr_setUserMessage(&$saddr, $message, $level=SADDR_MSG_ERROR)
 {
-   $saddr['user_messages'][]=array('msg'=>$message, 'level'=>$level);
+   /* This for the user, don't say several time the same thing */
+   $msg_cs=md5($message . $level);
+   if(!isset($saddr['message_registery'][$msg_cs])) {
+      $saddr['user_messages'][]=array('msg'=>$message, 'level'=>$level);
+      $saddr['message_registery'][$msg_cs]=1;
+   }
 }
 
 function saddr_removeModule(&$saddr, $module)
@@ -160,6 +173,17 @@ function saddr_setLdapObjectClasses(&$saddr, $oc)
 function saddr_getLdapObjectClasses(&$saddr)
 {
    return $saddr['ldap']['objectclass'];
+}
+
+function saddr_setLdapRootDse(&$saddr, $rootdse)
+{
+   $saddr['ldap']['rootdse']=$rootdse;
+   return TRUE;
+}
+
+function saddr_getLdapRootDse(&$saddr)
+{
+   return $saddr['ldap']['rootdse'];
 }
 
 function saddr_setUser(&$saddr, $user)
