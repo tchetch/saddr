@@ -652,6 +652,7 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
          $has_groups=FALSE;
          $attrs=saddr_getAttrs($saddr, $module);
          $attrs_group=saddr_getAttrsGroup($saddr, $module);
+         $has_group=FALSE;
          if($attrs_group!=NULL) $has_group=TRUE;
 
          if(isset($ldap_entry['dn'])) {
