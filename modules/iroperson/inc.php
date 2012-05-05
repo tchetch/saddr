@@ -13,7 +13,8 @@ function ext_saddr_iroperson_get_fn_list()
          'getTemplates'=>'ext_iroperson_getTemplates',
          'getRdnAttributes'=>'ext_iroperson_getRdnAttributes',
          'getAttributesCombination'=>'ext_iroperson_getAttributesCombination',
-         'processAttributes'=>'ext_iroperson_processAttributes'
+         'processAttributes'=>'ext_iroperson_processAttributes',
+         'getAttrsGroup'=>'ext_iroperson_getAttrsGroup'
          );
 }
 
@@ -53,6 +54,21 @@ function ext_iroperson_getAttrs()
       'irobankestablishment'=>'bank',
       'birthday'=>'birthday'
       );
+}
+
+function ext_iroperson_getAttrsGroup()
+{
+   return array(
+         'names'=>array('title', 'displayname', 'lastname',
+            'firstname'),
+         'work'=>array('work_npa', 'company', 'work_city', 'work_state',
+            'work_country', 'work_telephone', 'work_address', 'work_fax'),
+         'private'=>array('home_mobile', 'home_telephone', 'home_state',
+            'home_city', 'home_npa', 'home_country', 'home_address',
+            'birthday'),
+         'internet'=>array('work_email', 'url'),
+         'other'=>array('tags', 'restricted_tags', 'description'),
+         'bank'=>array('iban', 'bank'));
 }
 
 function ext_iroperson_getClass()

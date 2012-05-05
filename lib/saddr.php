@@ -49,7 +49,8 @@ function saddr_init()
                array('getTemplates', TRUE),
                array('getRdnAttributes', TRUE),
                array('getAttributesCombination', FALSE),
-               array('processAttributes', FALSE)
+               array('processAttributes', FALSE),
+               array('getAttrsGroup', FALSE)
                )
             ),
          'dir'=>array(
@@ -413,6 +414,11 @@ function saddr_getAttrs(&$saddr, $type)
    return saddr_getFromFunction($saddr, $type, 'getAttrs');
 }
 
+function saddr_getAttrsGroup(&$saddr, $type)
+{
+   return saddr_getFromFunction($saddr, $type, 'getAttrsGroup');
+}
+
 function saddr_getTemplates(&$saddr, $type)
 {
    return saddr_getFromFunction($saddr, $type, 'getTemplates');
@@ -643,11 +649,22 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
       }
 
       if($module) {
+         $has_groups=FALSE;
          $attrs=saddr_getAttrs($saddr, $module);
+         $attrs_group=saddr_getAttrsGroup($saddr, $module);
+         if($attrs_group!=NULL) $has_group=TRUE;
+
          if(isset($ldap_entry['dn'])) {
             $smarty_entry['id']=saddr_urlEncrypt($saddr, $ldap_entry['dn']);
             $smarty_entry['module']=$module;
             $smarty_entry['dn']=$ldap_entry['dn'];
+            if($has_group) {
+               $smarty_entry['__group']=array();
+               foreach($attrs_group as $k=>$d) {
+                  $smarty_entry['__group'][$k]=array('nonempty'=>FALSE,
+                        'count'=>0);
+               }
+            }
 
             if(isset($ldap_entry['seealso'])) {
                $smarty_entry['seealso']=array();
@@ -661,6 +678,15 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
                      $ldap_entry[$ldap_attr]['count']>0) {
                   if(is_array($attr)) {
                      foreach($attr as $att) {
+                        if($has_group) {
+                           foreach($attrs_group as $k=>$ag) {
+                              if(in_array($att, $ag)) {
+                                 $smarty_entry['__group'][$k]['nonempty']=TRUE;
+                                 $smarty_entry['__group'][$k]['count']++;
+                                 break;
+                              }
+                           }
+                        }
                         if(!isset($smarty_entry[$att]) ||
                               !is_array($smarty_entry[$att])) {
                            $smarty_entry[$att]=array();
@@ -673,6 +699,15 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
                         }
                      }
                   } else if(is_string($attr)) {
+                     if($has_group) {
+                        foreach($attrs_group as $k=>$ag) {
+                           if(in_array($attr, $ag)) {
+                              $smarty_entry['__group'][$k]['nonempty']=TRUE;
+                              $smarty_entry['__group'][$k]['count']++;
+                              break;
+                           }
+                        }
+                     }
                      if(!isset($smarty_entry[$attr]) || 
                            !is_array($smarty_entry[$attr])) {
                         $smarty_entry[$attr]=array();
@@ -690,7 +725,7 @@ function saddr_makeSmartyEntry(&$saddr, $ldap_entry)
          }
       }      
    }
-
+   
    return $smarty_entry; 
 }
 

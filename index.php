@@ -132,6 +132,7 @@ $Smarty->registerPlugin('function', 'saddr_class_message', 's2s_classOfMessage')
 $Smarty->registerPlugin('function', 'saddr_entry', 's2s_displaySmartyEntry');
 $Smarty->registerPlugin('block', 'saddr_when_module_available', 
       's2s_whenModuleAvailable');
+$Smarty->registerPlugin('block', 'saddr_ifgroup', 's2s_ifgroup');
 $Smarty->registerPlugin('function', 'saddr_dojo', 's2s_dojoPath');
 $Smarty->registerPlugin('function', 'saddr_dijit_theme_path', 's2s_dijitThemePath');
 $Smarty->registerPlugin('function', 'saddr_dijit_theme_name', 's2s_dijitThemeName');

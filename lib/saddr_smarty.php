@@ -116,6 +116,21 @@ function s2s_whenModuleAvailable($params, $content, $smarty)
    }
 }
 
+function s2s_ifGroup($params, $content, $smarty)
+{
+   if(!isset($params['group'])) return $content;
+   if(!is_string($params['group'])) return $content;
+   $saddr=$smarty->getTemplateVars('saddr');
+   if(!isset($saddr['search_results'])) return $content;
+   $e=$saddr['search_results'];
+   if(isset($e['__edit'])) return $content;
+   if(!isset($e['__group'])) return $content;
+   if(!isset($e['__group'][$params['group']])) return $content;
+   if(!isset($e['__group'][$params['group']]['nonempty'])) return $content;
+   if($e['__group'][$params['group']]['nonempty']) return $content;
+   return '';
+}
+
 function s2s_classOfMessage($params, $smarty) 
 {
    if(isset($params['errno'])) {
