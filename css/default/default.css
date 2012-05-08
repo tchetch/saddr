@@ -43,6 +43,10 @@ a {
 	color: #A00000;
 }
 
+a:hover {
+	text-decoration: underline;
+}
+
 span#saddr_toolbox {
    float: left; position: relative;
    left: 5%; bottom: -5px; width: 30%;

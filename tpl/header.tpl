@@ -7,7 +7,7 @@
 {if isset($saddr.op) && 
 	isset($saddr.search)}
 <span><a href="{saddr_url op=$saddr.op search=$saddr.search}"
-	title="Search again">Search again</a></span>
+	title="Search again">{count($saddr.search_results)} result(s)</a></span>
 {/if}
 {if isset($saddr.search_results) &&
    isset($saddr.search_results.id)}

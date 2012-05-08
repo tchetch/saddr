@@ -176,7 +176,7 @@ if(isset($_GET['op'])) {
          if(isset($_GET['search'])) {
             $search_string=saddr_urlDecrypt($Saddr, $_GET['search']);
             if(is_string($search_string)) {
-               $search=saddr_search($Saddr, '*'.$search_string.'*',
+               $search=saddr_search($Saddr, $search_string,
                      array('tags', 'restricted_tags'));
                $saddr_results['op']=$_GET['op'];
                /* Reencrypt or you experience some troubles with the browser */
